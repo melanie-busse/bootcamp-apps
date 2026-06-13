@@ -1,0 +1,6 @@
+.git
+.idea
+.next
+out
+build
+*.log

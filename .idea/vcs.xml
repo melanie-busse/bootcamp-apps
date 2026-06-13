@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$/apps/Art-Gallery" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/apps/DarkBay" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/apps/Flip-Wise" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/apps/Theme Creator" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/apps/Trail-Guide" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/apps/cyber-chat" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/apps/quizGame" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/apps/rick-and-morty-app" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
 </project>

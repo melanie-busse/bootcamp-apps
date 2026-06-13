@@ -1,0 +1,61 @@
+name: Deploy Art Gallery
+
+# Die Pipeline startet nur, wenn du auf 'main' pushst...
+on:
+  push:
+    branches:
+      - main
+    # ...und sich auch wirklich im Art-Gallery-Ordner etwas geändert hat!
+    paths:
+      - 'apps/Art-Gallery/**'
+      - '.github/workflows/deploy-art-gallery.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Code aus GitHub auschecken
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Docker Buildx einrichten (erlaubt optimiertes Bauen und Cachen)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. Das Docker Image lokal auf dem GitHub-Server bauen
+      - name: Build Docker Image
+        run: |
+          docker build -t art-gallery:latest -f apps/Art-Gallery/Dockerfile .
+
+      # 4. Das Image auf deinen vServer übertragen und dort starten
+      # Hier nutzen wir deine bestehenden Secrets (deinen SSH-Key/Passwort)
+      - name: Deploy to vServer via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }} # oder secrets.SERVER_PASSWORD, falls du Passwörter nutzt
+          script: |
+            # Auf dem Server in den richtigen Ordner wechseln
+            mkdir -p /var/www/art-gallery
+            cd /var/www/art-gallery
+            
+            # Hier legen wir die docker-compose.yml auf dem Server ab, falls nicht vorhanden
+            cat << 'EOF' > docker-compose.yml
+            version: '3.8'
+            services:
+              art-gallery:
+                image: art-gallery:latest
+                container_name: art-gallery-app
+                restart: always
+                ports:
+                  - "3001:3000"
+                environment:
+                  - NODE_ENV=production
+                  - PORT=3000
+                  - HOSTNAME=0.0.0.0
+            EOF
+            
+            # Container neu starten
+            docker compose up -d --force-recreate

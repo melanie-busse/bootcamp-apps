@@ -1,0 +1,77 @@
+:root {
+    /* Primärfarbe (Grün) */
+    --primary: #4e6e5d !important;
+    --primary-hover: #3e5a4a !important;
+
+    /* Hintergrund der gesamten Seite */
+    --background-color: #1a1c1a !important;
+    --color: #dcedc8 !important;
+}
+
+/* Die Karten-Komponenten (Header, Body, Footer) */
+article {
+    background-color: #242824 !important; /* Dunkles Moosgrün */
+    border: 1px solid #3d3329 !important; /* Erdbrauner Rand */
+}
+
+article header {
+    background-color: #2e342e !important; /* Etwas abgesetzter Header */
+    border-bottom: 1px solid #3d3329 !important;
+}
+
+article footer {
+    background-color: #242824 !important;
+}
+
+/* Die Navigations-Links oben rechts */
+nav a {
+    color: #aebf97 !important; /* Ein helleres, entspanntes Grün */
+}
+
+nav a:hover {
+    color: #ffffff !important;
+}
+
+/* Der Titel oben links ("Trail-Guide") */
+nav ul li strong {
+    color: #dcedc8 !important;
+}
+
+h1, h2, h3 {
+    color: #ffffff !important;
+}
+
+/* Ein kleiner Akzent für die Kilometerangabe */
+article p strong {
+    color: #aebf97;
+}
+
+/* Normale Navigations-Links (etwas blasser) */
+nav ul li a {
+    color: #aebf97 !important;
+    opacity: 0.7;
+    text-decoration: none;
+}
+
+/* Der aktive Link (heller, keine Transparenz, vielleicht unterstrichen) */
+nav ul li a.secondary {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    border-bottom: 2px solid var(--primary);
+}
+
+/* Breadcrumb-Navigation dezent färben */
+nav[aria-label="breadcrumb"] a {
+    color: #aebf97 !important;
+    font-size: 0.9rem;
+}
+
+nav[aria-label="breadcrumb"] ul li:not(:last-child)::after {
+    color: #4a3728; /* Farbe des Trenners (/) */
+}
+
+/* Die Detail-Beschreibung etwas hervorheben */
+.lead {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}

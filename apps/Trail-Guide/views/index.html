@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Entdecke neue Wanderwege</h1>
+
+<div class="grid">
+    {% for trail in trails %}
+    <article>
+        <header>
+            <h3>{{ trail.name }}</h3>
+        </header>
+        <p>{{ trail.regionName }} ({{ trail.country }})</p>
+        <p>Länge: {{ trail.distance }} km</p>
+        <footer>
+            <a href="/trails/{{ trail.slug }}" role="button">Details ansehen</a>
+        </footer>
+    </article>
+    {% else %}
+    <p>Keine Wanderwege gefunden.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,232 @@
+### ====================================================================
+### 1. VORBEREITUNG: REGISTRIERUNG & LOGIN (Zuerst ausführen!)
+### ====================================================================
+
+### User 1 (Alice) registrieren
+POST http://localhost:3000/users/register
+Content-Type: application/json
+
+{
+  "username": "alice_verkauft",
+  "password": "GeheimesPasswort123!"
+}
+
+###
+
+### User 2 (Bob) registrieren
+POST http://localhost:3000/users/register
+Content-Type: application/json
+
+{
+  "username": "bob_bietet",
+  "password": "EinAnderesPasswort456!"
+}
+
+###
+
+### LoginComponent als Alice (Verkäuferin) -> Token speichern
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "username": "alice_verkauft",
+  "password": "GeheimesPasswort123!"
+}
+
+> {%
+    client.global.set("alice_token", response.body.accessToken);
+%}
+
+###
+
+### LoginComponent als Bob (Bieter) -> Token speichern
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "username": "bob_bietet",
+  "password": "EinAnderesPasswort456!"
+}
+
+> {%
+    client.global.set("bob_token", response.body.accessToken);
+%}
+
+
+### ===================================================================
+### 2. AUKTIONSMODUL (Mit Token abgesichert)
+### ===================================================================
+
+### Eine neue Auktion erstellen (Erstellt von Alice über ihr Token)
+POST http://localhost:3000/auctions
+Content-Type: application/json
+Authorization: Bearer {{alice_token}}
+
+{
+  "title": "Gezinkte Würfel",
+  "description": "Perfekt für das nächste Untergrund-Casino",
+  "startPrice": 50.00
+}
+
+> {%
+    // ID für die Gebots-Tests merken
+    client.global.set("auktion_wuerfel_id", response.body.id);
+%}
+
+###
+
+### Eine zweite Auktion mit festem Enddatum erstellen (Erstellt von Alice)
+POST http://localhost:3000/auctions
+Content-Type: application/json
+Authorization: Bearer {{alice_token}}
+
+{
+  "title": "Antikes Zauberbuch",
+  "description": "Einige Seiten sind leicht angekokelt.",
+  "startPrice": 120.50,
+  "endDate": "2026-06-15T18:00:00.000Z"
+}
+
+###
+
+### FEHLER-TEST: Auktion erstellen OHNE Token (Erwartet 401 Unauthorized)
+POST http://localhost:3000/auctions
+Content-Type: application/json
+
+{
+  "title": "Antike Standuhr",
+  "description": "Wunderschöne Standuhr aus dem 19. Jahrhundert.",
+  "startPrice": 250.00
+}
+
+
+### ===================================================================
+### 3. ÖFFENTLICHE ABFRAGEN (Hier wird kein Token benötigt)
+### ===================================================================
+
+### Alle Auktionen abrufen
+GET http://localhost:3000/auctions
+Accept: application/json
+
+###
+
+### Eine einzelne Auktion über die ID abrufen
+GET http://localhost:3000/auctions/{{auktion_wuerfel_id}}
+Accept: application/json
+
+
+### ===================================================================
+### 4. ANGEBOTSMODUL (Offers, Schutzregeln & Bietlogik)
+### ===================================================================
+
+### FEHLER-TEST: Alice versucht auf IHRE EIGENE Auktion zu bieten
+# (Erwartet 403 Forbidden!)
+POST http://localhost:3000/offers
+Content-Type: application/json
+Authorization: Bearer {{alice_token}}
+
+{
+  "amount": 65.00,
+  "auctionId": {{auktion_wuerfel_id}}
+}
+
+###
+
+### ERFOLGS-TEST: Bob gibt ein gültiges Gebot ab (Erwartet 201 Created)
+POST http://localhost:3000/offers
+Content-Type: application/json
+Authorization: Bearer {{bob_token}}
+
+{
+  "amount": 65.00,
+  "auctionId": {{auktion_wuerfel_id}}
+}
+
+###
+
+### FEHLER-TEST: Bob versucht das Gebot zu unterbieten (Erwartet 409 Conflict)
+POST http://localhost:3000/offers
+Content-Type: application/json
+Authorization: Bearer {{bob_token}}
+
+{
+  "amount": 40.00,
+  "auctionId": {{auktion_wuerfel_id}}
+}
+
+###
+
+### Den Gebotsverlauf für die Auktion abrufen (Öffentlich)
+GET http://localhost:3000/offers/auction/{{auktion_wuerfel_id}}
+Accept: application/json
+
+
+### ===================================================================
+### 5. PAGINATION UND FILTER-TESTS (Öffentlich)
+### ===================================================================
+
+### Vorbereitung: Weitere Test-Auktionen anlegen (Durch Alice)
+POST http://localhost:3000/auctions
+Content-Type: application/json
+Authorization: Bearer {{alice_token}}
+
+{
+  "title": "High-End Gaming PC",
+  "description": "Mit RTX 4090 und Wasserkühlung. Wie neu!",
+  "startPrice": 2500.00
+}
+
+###
+
+### Limit auf 2 Einträge setzen (Seite 1)
+GET http://localhost:3000/auctions?limit=2&page=1
+Accept: application/json
+
+###
+
+### Seite 2 aufrufen (Blättern)
+GET http://localhost:3000/auctions?limit=2&page=2
+Accept: application/json
+
+###
+
+### Kombi aus Filter & Paginierung
+GET http://localhost:3000/auctions?status=open&min-price=50&limit=5
+Accept: application/json
+
+### ====================================================================
+### BONUS: MERKLISTEN-TESTS (Watchlist)
+### ====================================================================
+
+### 1. Eigene Merkliste abrufen (Sollte am Anfang leer sein `[]`)
+GET http://localhost:3000/users/watchlist
+Authorization: Bearer {{bob_token}}
+Accept: application/json
+
+###
+
+### 2. Eine Auktion (ID: 1) zur Merkliste hinzufügen
+POST http://localhost:3000/users/watchlist/1
+Authorization: Bearer {{bob_token}}
+Content-Type: application/json
+
+###
+
+### 3. Merkliste erneut abrufen (Auktion 1 sollte jetzt drin sein!)
+GET http://localhost:3000/users/watchlist
+Authorization: Bearer {{bob_token}}
+Accept: application/json
+
+###
+
+### 4. FEHLER-TEST: Dieselbe Auktion noch mal hinzufügen (409 Conflict)
+POST http://localhost:3000/users/watchlist/1
+Authorization: Bearer {{bob_token}}
+Content-Type: application/json
+
+###
+
+### 5. Eine Auktion von der Merkliste löschen
+DELETE http://localhost:3000/users/watchlist/1
+Authorization: Bearer {{bob_token}}
+Accept: application/json

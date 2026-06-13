@@ -1,0 +1,107 @@
+<!-- Header -->
+<div style="display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px 30px; border-bottom: 2px solid #334155; margin-bottom: 30px;">
+  <div style="display: flex; align-items: center; gap: 20px;">
+    <h1 style="color: #ffcc00; margin: 0; font-family: sans-serif; font-size: 1.5rem;">
+      🔍 Relikt-Details
+    </h1>
+    <a routerLink="/auctions" style="color: #38bdf8; text-decoration: none; font-weight: bold;">
+      ← Zurück zur Bucht
+    </a>
+  </div>
+
+  <button
+    (click)="onLogout()"
+    style="background: #ef4444; color: white; font-weight: bold; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;"
+  >
+    Taverne verlassen 🚶‍♂️💨
+  </button>
+</div>
+
+<div class="pirate-bay-container" style="padding: 0 20px; color: white;">
+
+  @if (auction) {
+    <div style="display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start;">
+
+      <!-- LINKE SEITE: Die Kachel in voller Pracht -->
+      <div style="flex: 1; min-width: 300px; max-width: 500px; background: #1e293b; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+        <h2 style="color: #ffcc00; margin-top: 0; font-size: 1.8rem;">🪙 {{ auction.title }}</h2>
+        <p style="color: #94a3b8; font-size: 1.1rem; line-height: 1.5; margin: 20px 0;">
+          {{ auction.description }}
+        </p>
+
+        <div style="background: #0f172a; padding: 15px; border-radius: 6px; margin: 20px 0;">
+          <span style="color: #94a3b8; font-size: 0.85rem;">Aktuelles Höchstgebot:</span>
+          <div style="color: #38bdf8; font-size: 1.8rem; font-weight: bold; margin-top: 5px;">
+            💰 {{ auction.currentPrice || auction.startPrice }} €
+          </div>
+          <small style="color: #64748b; display: block; margin-top: 5px;">Mindestgebot: {{ auction.startPrice }} €</small>
+        </div>
+
+        <!-- Biet-Box -->
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <input
+            #bidInput
+            type="number"
+            placeholder="Gebot (€)"
+            style="padding: 12px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; flex: 1; font-size: 1rem;"
+          >
+          <button
+            (click)="submitBid(bidInput)"
+            style="background: #e6a100; color: #0f172a; font-weight: bold; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem;"
+          >
+            Bieten ⚔️
+          </button>
+        </div>
+
+        @if (errorMessage) {
+          <div style="color: #ef4444; font-size: 0.9rem; font-weight: 500; margin-top: 12px;">
+            ⚠️ {{ errorMessage }}
+          </div>
+        }
+
+        <div style="margin-top: 25px; font-size: 0.9rem; color: #f87171; display: flex; align-items: center; gap: 5px;">
+          ⏳ Endet am: {{ auction.endDate | date:'medium' }}
+        </div>
+      </div>
+
+      <!-- RECHTE SEITE: Der Gebotsverlauf -->
+      <div style="flex: 1; min-width: 300px; background: #1e293b; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+        <h3 style="color: #ffcc00; margin-top: 0; border-bottom: 2px solid #334155; padding-bottom: 10px; margin-bottom: 15px;">
+          📜 Logbuch der Gebote ({{ offers.length }})
+        </h3>
+
+        <div style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+          @for (offer of offers; track offer.id; let first = $first) {
+            <div [style.background]="first ? '#1e3a8a' : '#0f172a'"
+                 [style.border]="first ? '1px solid #3b82f6' : 'none'"
+                 style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-radius: 6px; margin-bottom: 10px;">
+              <div>
+                <span style="font-weight: bold; color: #fff;">
+                  👤 {{ offer.user?.username || offer.username || 'Unbekannter Pirat' }}
+                </span>
+                @if (first) {
+                  <span style="background: #3b82f6; color: white; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">
+                    Höchstbietender 👑
+                  </span>
+                }
+                <div style="font-size: 0.75rem; color: #64748b; margin-top: 3px;">
+                  {{ offer.createdAt | date:'medium' }}
+                </div>
+              </div>
+              <div style="color: #38bdf8; font-weight: bold; font-size: 1.1rem;">
+                💰 {{ offer.amount }} €
+              </div>
+            </div>
+          } @empty {
+            <p style="color: #94a3b8; text-align: center; padding: 20px 0;">
+              Noch keine Seele hat für diese Beute geboten. Sei der Erste! 🏴‍☠️
+            </p>
+          }
+        </div>
+      </div>
+
+    </div>
+  } @else if (!errorMessage) {
+    <p style="color: #94a3b8;">Lade Daten aus den Tiefen des Meeres...</p>
+  }
+</div>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Quiz App</title>
+
+        <link rel="icon" href="assets/icons/favicon.png" type="image/png" sizes="32x32">
+
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+
+        <script src="./js/data.js" defer></script>
+        <script src="./js/global.js" defer></script>
+        <script src="./js/nav.js" defer></script>
+        <script src="./js/profile.js" defer></script>
+    </head>
+
+    <body data-js="body">
+        <header class="header quiz-div">
+            <img src="./assets/images/tierquiz2.png" class="quiz-image" alt="Animal Quiz">
+        </header>
+        <main class="main">
+            <div class="quiz-card">
+                <!--Profile Section -->
+                <section class="profile__section">
+                    <img src="assets/images/profilepicture.jpg" class="profile__image" alt="Melanie Busse profile picture">
+                    <h2 class="h2">Melanie Busse</h2>
+                </section>
+
+
+                <!-- About Me Section -->
+                <section>
+                    <h2 class="profile__headline">About me</h2>
+                    <p class="about__text">
+                        I am an avid quiz enthusiast and would like to share my knowledge with the community.
+                        I enjoy asking questions about different animal species.
+                    </p>
+                </section>
+
+                <!-- Statistic -->
+                <section class="stats__section">
+                    <div class="settings__item stats__item">
+                        <img src="assets/icons/nav__quizhome.png" class="stats__item__img" alt="Created questions"/>
+                        12
+                    </div>
+                    <div class="settings__item stats__item">
+                        <img src="assets/icons/bookmark_checked.png" class="stats__item__img" alt="Bookmarks"/>
+                        4
+                    </div>
+                </section>
+
+                <section class="settings__section">
+                    <h2 class="profile__headline">Settings</h2>
+                    <div class="settings__item">
+                        <label>Dark mode</label>
+                        <button
+                                class="toggle__switch"
+                                id="darkModeToggle"
+                                data-js="toggle-button"
+                                role="switch"
+                                aria-label="Dark Mode Toggle"></button>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <nav aria-label="main navigation" class="nav"></nav>
+    </body>
+</html>

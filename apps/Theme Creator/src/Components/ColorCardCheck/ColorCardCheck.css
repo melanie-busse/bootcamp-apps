@@ -1,0 +1,48 @@
+.contrast-checker {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    font-size: 14px;
+    font-family: var(--font-family-contrast-checker);
+}
+
+.contrast-label {
+    font-weight: 500;
+    color: var(--color-form-label);
+}
+
+.contrast-loading,
+.contrast-no-data {
+    color: var(--color-form-label);
+    font-size: 13px;
+}
+
+.contrast-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 15px;
+    font-size: 14px;
+    font-family: var(--font-family);
+}
+
+.loading-text,
+.no-data-text {
+    color: var(--color-form-label);
+}
+
+.icon-yup {
+    font-size: 20px;
+    color: var(--color-icon-yup);
+}
+
+.icon-kinda {
+    font-size: 20px;
+    color: var(--color-icon-kinda);
+}
+
+.icon-nope {
+    font-size: 20px;
+    color: var(--color-icon-nope);
+}

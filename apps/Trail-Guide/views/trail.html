@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header>
+    <nav aria-label="breadcrumb">
+        <ul>
+            <li><a href="/">Startseite</a></li>
+            <li>{{ trail.name }}</li>
+        </ul>
+    </nav>
+    <h1>{{ trail.name }}</h1>
+</header>
+
+<div class="grid">
+    <section>
+        <article>
+            <header>
+                <strong>Details zum Weg</strong>
+            </header>
+            <ul>
+                <li><strong>Region:</strong> {{ trail.regionName }}</li>
+                <li><strong>Land:</strong> {{ trail.country }}</li>
+                <li><strong>Länge:</strong> {{ trail.distance }} km</li>
+            </ul>
+            <p>{{ trail.description }}</p>
+            <footer>
+                <a href="/" class="secondary">Zurück zur Übersicht</a>
+            </footer>
+        </article>
+    </section>
+
+    <aside>
+        <figure>
+            <div style="background-color: #2e342e; height: 300px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #3d3329;">
+                <span style="color: #aebf97;">[ Bild von {{ trail.name }} ]</span>
+            </div>
+            <figcaption>Impressionen aus der Region {{ trail.regionName }}</figcaption>
+        </figure>
+    </aside>
+</div>
+{% endblock %}

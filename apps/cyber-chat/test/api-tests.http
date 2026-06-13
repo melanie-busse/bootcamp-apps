@@ -1,0 +1,116 @@
+### ===================================================================
+### 1. AUTHENTIFIZIERUNG & BENUTZER (ÖFFENTLICHE ROUTEN)
+### ===================================================================
+
+### 1a. Einen neuen Benutzer registrieren
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "Melanie",
+  "password": "superSafePassword123"
+}
+
+### 1b. Einloggen (Kopiere das 'access_token' aus der Serverantwort!)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "username": "Melanie",
+  "password": "superSafePassword123"
+}
+
+### 1c. Eigenes Profil abrufen (Testet den globalen Guard)
+# Ersetze <TOKEN> mit dem access_token aus Schritt 1b
+GET http://localhost:3000/auth/me
+Authorization: Bearer <TOKEN>
+
+
+### ===================================================================
+### 2. THREADS (GESCHÜTZTE ROUTEN)
+### ===================================================================
+
+### 2a. Alle Threads abrufen (Paginierung & Sortierung greifen automatisch)
+GET http://localhost:3000/threads?page=1&limit=5&sort=-createdAt
+Authorization: Bearer <TOKEN>
+
+### 2b. Threads nach Autor filtern (Bonus)
+GET http://localhost:3000/threads?author=Melanie
+Authorization: Bearer <TOKEN>
+
+### 2c. Custom Pipe Test: Gültiges Startdatum (Bonus)
+GET http://localhost:3000/threads?startDate=2026-05-30
+Authorization: Bearer <TOKEN>
+
+### 2d. Custom Pipe Test: Ungültiges Datum (Erwartet 400 Bad Request)
+GET http://localhost:3000/threads?startDate=kein-datum
+Authorization: Bearer <TOKEN>
+
+### 2e. Neuen Thread erstellen (Autor wird automatisch via JWT gesetzt!)
+# Kopiere die generierte 'id' (UUID) aus der Antwort für die nächsten Schritte!
+POST http://localhost:3000/threads
+Authorization: Bearer <TOKEN>
+Content-Type: application/json
+
+{
+  "title": "Mein geschützter Cyber Thread",
+  "body": "Das hier ist der Inhalt des Beitrags, der jetzt mindestens 10 Zeichen lang ist."
+}
+
+### 2f. Whitelist-Check beim Erstellen (Erwartet 400 Bad Request wegen extraField)
+POST http://localhost:3000/threads
+Authorization: Bearer <TOKEN>
+Content-Type: application/json
+
+{
+  "title": "Hack-Versuch",
+  "body": "Dieser Body ist lang genug für den Test.",
+  "extraField": "Ich breche die Whitelist-Regel"
+}
+
+### 2g. Einzelnen Thread über UUID abrufen (Inklusive Kommentare)
+# Falls du hier '1' statt einer UUID übergibst, blockt die ParseUUIDPipe mit 400!
+GET http://localhost:3000/threads/<DEINE-THREAD-UUID>
+Authorization: Bearer <TOKEN>
+
+### 2h. Eigenen Thread teilaktualisieren (PATCH)
+PATCH http://localhost:3000/threads/<DEINE-THREAD-UUID>
+Authorization: Bearer <TOKEN>
+Content-Type: application/json
+
+{
+  "title": "Ein upgedateter, sicherer Titel"
+}
+
+
+### ===================================================================
+### 3. KOMMENTARE (GESCHÜTZTE ROUTEN)
+### ===================================================================
+
+### 3a. Kommentar zu einem Thread hinzufügen
+POST http://localhost:3000/threads/<DEINE-THREAD-UUID>/comments
+Authorization: Bearer <TOKEN>
+Content-Type: application/json
+
+{
+  "body": "Mega cooler und vor allem sicherer Beitrag!"
+}
+
+### 3b. Einzelnen Kommentar abrufen
+# Kommentare nutzen in der DB weiterhin fortlaufende Nummern (1, 2, 3...)
+GET http://localhost:3000/comments/1
+Authorization: Bearer <TOKEN>
+
+### 3c. Kommentar soft-löschen (Setzt Body auf 'deleted', erwartet 204 No Content)
+DELETE http://localhost:3000/comments/1
+Authorization: Bearer <TOKEN>
+
+
+### ===================================================================
+### 4. AUFRÄUMEN & RESSOURCEN LÖSCHEN
+### ===================================================================
+
+### 4a. Thread komplett löschen (Inklusive Cascade-Delete der Kommentare, erwartet 204)
+# Funktioniert nur, wenn du eingeloggt bist und der Thread dir gehört!
+DELETE http://localhost:3000/threads/<DEINE-THREAD-UUID>
+Authorization: Bearer <TOKEN>

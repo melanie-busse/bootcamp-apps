@@ -1,0 +1,95 @@
+<div style="display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px 30px; border-bottom: 2px solid #334155; margin-bottom: 30px;">
+  <div style="display: flex; align-items: center; gap: 20px;">
+    <h1 style="color: #ffcc00; margin: 0; font-family: sans-serif; font-size: 1.5rem;">
+      ⭐ Deine persönliche Schatzkarte
+    </h1>
+    <a routerLink="/auctions" style="color: #38bdf8; text-decoration: none; font-weight: bold;">
+      ← Zurück zur Bucht
+    </a>
+  </div>
+
+  <button
+    (click)="onLogout()"
+    style="background: #ef4444; color: white; font-weight: bold; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;"
+  >
+    Taverne verlassen 🚶‍♂️💨
+  </button>
+</div>
+
+<div class="pirate-bay-container" style="padding: 0 20px 20px 20px;">
+
+  <h2 style="color: #ffcc00; font-family: sans-serif; margin-bottom: 20px;">
+    Gesicherte Beute im Visier ⚔️
+  </h2>
+
+  <div class="auctions-grid" style="display: flex; flex-wrap: wrap; gap: 20px;">
+
+    @for (auction of watchlistAuctions; track auction.id) {
+
+      <div class="auction-card" style="position: relative; background: #1e293b; color: white; padding: 20px; border-radius: 8px; width: 300px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+
+        <button
+          (click)="toggleWatchlist(auction.id)"
+          style="
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+            z-index: 10;
+            line-height: 1;
+            color: #ffcc00;
+            filter: drop-shadow(0 0 4px rgba(255, 204, 0, 0.6));
+          "
+          onmouseover="this.style.transform='scale(1.2)'"
+          onmouseout="this.style.transform='scale(1)'"
+        >
+          ⭐
+        </button>
+
+        <h3 style="margin-top: 0; padding-right: 40px; color: #fff;">🪙 {{ auction.title }}</h3>
+        <p style="color: #94a3b8; font-size: 0.9rem;">{{ auction.description }}</p>
+
+        <div class="price-box" style="background: #0f172a; padding: 10px; border-radius: 6px; margin-top: 10px;">
+          <span style="color: #94a3b8; font-size: 0.8rem;">Aktuelle Beute (Gebot):</span>
+          <div style="color: #38bdf8; font-size: 1.2rem; font-weight: bold; margin-top: 5px;">
+            💰 {{ auction.currentPrice || auction.startPrice }} €
+          </div>
+        </div>
+
+        <div style="margin-top: 15px; display: flex; gap: 10px;">
+          <input
+            #bidInput
+            type="number"
+            placeholder="Gebot (€)"
+            style="padding: 8px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; width: 110px;"
+          >
+          <button
+            (click)="submitBid(auction.id, bidInput)"
+            style="background: #e6a100; color: #0f172a; font-weight: bold; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;"
+          >
+            Bieten ⚔️
+          </button>
+        </div>
+
+        @if (errorMessage) {
+          <div style="color: #ef4444; font-size: 0.85rem; font-weight: 500; margin-top: 8px;">
+            ⚠️ {{ errorMessage }}
+          </div>
+        }
+
+        <div style="margin-top: 15px; font-size: 0.8rem; color: #f87171;">
+          ⏳ Endet: {{ auction.endDate | date:'medium' }}
+        </div>
+
+      </div>
+
+    } @empty {
+      <p style="color: #94a3b8;">Du hast dir noch keine Beute mit einem Stern gesichert. Segel zurück zur Bucht, um Relikte zu markieren!</p>
+    }
+
+  </div>
+</div>

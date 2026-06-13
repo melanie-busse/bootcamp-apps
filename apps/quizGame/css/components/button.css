@@ -1,0 +1,76 @@
+.button {
+    padding: 0.5rem 0.5rem;
+    width: auto;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: var(--button-primary);
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.35);
+    filter: brightness(1.05);
+}
+
+.button:active {
+    background-color: var(--button-primary-hover);
+    transform: scale(0.98);
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+.button--text {
+    display: inline-block;
+    min-width: 150px;
+    color: var( --button-text);
+    font-size: 0.8rem;
+    transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.button--text:active {
+    background-color: var(--button-primary-hover);
+    transform: scale(0.98);
+}
+
+.button__wrapper {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: left;
+}
+
+.button--correct {
+    background: var(--button-card-answer-correct);
+    border-color: var(--button-card-answer-correct-border);
+}
+
+.button--correct:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.35);
+    filter: brightness(1.05);
+}
+
+.button--notCorrect {
+    background: var(--button-card-answer-notCorrect);
+    border-color: var(--button-card-answer-notCorrect-border);
+}
+
+.button--notCorrect:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.35);
+    filter: brightness(1.05);
+}
+
+.button--selected {
+    background: var(--button-card-answer-selected);
+    border-color: var(--button-card-answer-selected-border);
+}
+
+.button--selected:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.35);
+    filter: brightness(1.08);
+}

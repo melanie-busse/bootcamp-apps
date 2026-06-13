@@ -1,0 +1,17 @@
+{% macro trailCard(trail) %}
+<article>
+    <header>
+        <h3>{{ trail.name }}</h3>
+    </header>
+
+    <p>
+        <strong>{{ trail.regionName if trail.regionName else "Region" }}</strong>
+        ({{ trail.country if trail.country else "Unbekannt" }})
+    </p>
+    <p>Länge: {{ trail.distance }} km</p>
+
+    <footer>
+        <a href="/trails/{{ trail.slug }}" role="button">Details ansehen</a>
+    </footer>
+</article>
+{% endmacro %}

@@ -1,0 +1,126 @@
+Alles klar, der Grundstein im Git-Repository ist gelegt! Da du die Dokumentation schon hast, gehen wir jetzt direkt in die operative Umsetzung.
+
+Der logischste erste Schritt ist das technische Fundament – also die Initialisierung des Node.js-Projekts und die Installation der Werkzeuge, damit du überhaupt Code schreiben und ausführen kannst.
+
+Hier ist dein Schlachtplan für die nächsten Minuten:
+
+1. npm Projekt initialisieren
+Öffne dein Terminal in deinem Projektordner und erstelle die package.json:
+
+Bash
+npm init -y
+
+2. Dependencies installieren
+Installiere die Pakete, die deine App zum Laufen braucht (Produktion) und die Tools für die Entwicklung (Dev):
+
+Produktion:
+npm install express nunjucks sqlite sqlite3 sanitize-html
+
+Entwicklung:
+npm install -D typescript tsx @types/express @types/nunjucks @types/sanitize-html @types/node
+
+
+### 3. TypeScript & Scripts konfigurieren
+npx tsc --init
+
+Alles klar, der Grundstein im Git-Repository ist gelegt! Da du die Dokumentation schon hast, gehen wir jetzt direkt in die operative Umsetzung.
+
+Der logischste erste Schritt ist das technische Fundament – also die Initialisierung des Node.js-Projekts und die Installation der Werkzeuge, damit du überhaupt Code schreiben und ausführen kannst.
+
+Hier ist dein Schlachtplan für die nächsten Minuten:
+
+1. npm Projekt initialisieren
+Öffne dein Terminal in deinem Projektordner und erstelle die package.json:
+
+Bash
+npm init -y
+2. Dependencies installieren
+Installiere die Pakete, die deine App zum Laufen braucht (Produktion) und die Tools für die Entwicklung (Dev):
+
+Produktion:
+
+Bash
+npm install express nunjucks sqlite sqlite3 sanitize-html
+Entwicklung:
+
+Bash
+    npm install -D typescript tsx @types/express @types/nunjucks @types/sanitize-html @types/node
+    ```
+
+### 3. TypeScript & Scripts konfigurieren
+Damit TypeScript weiß, was es tun soll, erstellst du die Konfigurationsdatei:
+```bash
+npx tsc --init
+Danach öffnest du die package.json und passt den Bereich "scripts" an, damit du das Projekt einfach mit npm run dev starten kannst:
+
+JSON
+"scripts": {
+  "dev": "tsx watch src/app.ts",
+  "db:seed": "sqlite3 data/trail-guide.db < data/seed.sql"
+}
+
+Alles klar, der Grundstein im Git-Repository ist gelegt! Da du die Dokumentation schon hast, gehen wir jetzt direkt in die operative Umsetzung.
+
+Der logischste erste Schritt ist das technische Fundament – also die Initialisierung des Node.js-Projekts und die Installation der Werkzeuge, damit du überhaupt Code schreiben und ausführen kannst.
+
+Hier ist dein Schlachtplan für die nächsten Minuten:
+
+1. npm Projekt initialisieren
+Öffne dein Terminal in deinem Projektordner und erstelle die package.json:
+
+Bash
+npm init -y
+2. Dependencies installieren
+Installiere die Pakete, die deine App zum Laufen braucht (Produktion) und die Tools für die Entwicklung (Dev):
+
+Produktion:
+
+Bash
+npm install express nunjucks sqlite sqlite3 sanitize-html
+Entwicklung:
+
+Bash
+    npm install -D typescript tsx @types/express @types/nunjucks @types/sanitize-html @types/node
+    ```
+
+### 3. TypeScript & Scripts konfigurieren
+Damit TypeScript weiß, was es tun soll, erstellst du die Konfigurationsdatei:
+```bash
+npx tsc --init
+Danach öffnest du die package.json und passt den Bereich "scripts" an, damit du das Projekt einfach mit npm run dev starten kannst:
+
+JSON
+"scripts": {
+  "dev": "tsx watch src/app.ts",
+  "db:seed": "sqlite3 data/trail-guide.db < data/seed.sql"
+}
+(Hinweis: Den db:seed-Befehl brauchen wir später, sobald du die Ordnerstruktur angelegt hast.)
+
+4. Umgebungsvariablen (.env)
+Erstelle eine Datei namens .env im Hauptverzeichnis. Hier kommen sensible Daten oder Pfade rein, die nicht direkt im Code stehen sollten:
+
+Code-Snippet
+PORT=3000
+DB_PATH=./data/trail-guide.db
+API_KEY=dein_geheimer_super_schluessel
+Wichtig: Erstelle auch eine .env.example mit den gleichen Schlüsseln (aber ohne echte Werte) und füge .env zu deiner .gitignore hinzu, damit dein API-Key nicht auf GitHub landet.
+
+5. Ordnerstruktur anlegen
+New-Item -ItemType Directory -Path src/routes, src/controllers, src/models, src/middleware, views/macros, views/admin, public, data
+
+6.Typdeklarationspakete installieren
+npm install express
+npm install --save-dev typescript @types/express @types/node
+
+Json
+{
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  }
+}
+
+7. Nunjucks-Setup
+npm install nunjucks
+npm install --save-dev @types/nunjucks
+npm install --save-dev prettier prettier-plugin-jinja-template

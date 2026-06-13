@@ -1,0 +1,89 @@
+.app-colors {
+  padding: 3rem 1.5rem 2rem;
+  width: 100%;
+  max-width: var(--max-width-container);
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.input-area {
+  position: relative;
+  max-width: 360px;
+  margin: 0.5rem auto 0.5rem;
+  min-height: 50px;
+}
+
+.empty-state {
+  width: 320px;
+  height: 80px;
+  margin: 0 auto 1rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-empty-state);
+  border-radius: var(--border-radius);
+  border: var(--border-empty-state);
+  color: var(--color-text-light);
+  font-weight: 500;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.header-section {
+  position: relative;
+  width: 100%;
+  max-width: var(--width-color-card);
+  margin: 0 auto 1.5rem;
+  min-height: 60px;
+  padding: 1rem 3rem 1rem 1.5rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-header-section);
+  backdrop-filter: blur(12px);
+  border: var(--border-button);
+  border-radius: var(--border-radius);
+}
+
+.theme-title {
+  flex: 1;
+  text-align: center;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-form-label);
+  white-space: nowrap;
+
+}
+
+.add-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+}
+
+@media (max-width: 480px) {
+  .header-section {
+    max-width: 340px;
+    margin: 0 auto 0.75rem;
+  }
+
+  .theme-title {
+    top: -22px;
+    font-size: 1.1rem;
+    padding-left: 0.5rem;
+  }
+
+  .add-button {
+    top: -12px;
+    right: 8px;
+    width: 48px !important;
+    height: 48px !important;
+  }
+}

@@ -1,0 +1,59 @@
+<div style="display: flex; justify-content: center; align-items: center; min-height: 80vh; background: #0f172a; padding: 20px;">
+
+  <div style="background: #1e293b; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #334155;">
+
+    <h2 style="color: #ffcc00; text-align: center; margin-bottom: 30px; font-family: sans-serif;">
+      🏴‍☠️ In die Taverne einloggen
+    </h2>
+
+    <form (ngSubmit)="onSubmit()">
+
+      <div style="margin-bottom: 20px;">
+        <label style="color: #94a3b8; display: block; margin-bottom: 8px; font-size: 0.9rem;">Piratenname (Username)</label>
+        <input
+          type="text"
+          name="username"
+          [(ngModel)]="username"
+          style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; box-sizing: border-box;"
+          placeholder="z.B. KaeptnKork"
+          required
+        >
+      </div>
+
+      <div style="margin-bottom: 25px;">
+        <label style="color: #94a3b8; display: block; margin-bottom: 8px; font-size: 0.9rem;">Geheimes Kennwort</label>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; box-sizing: border-box;"
+          placeholder="••••••••"
+          required
+        >
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="isLoading"
+        style="width: 100%; background: #e6a100; color: #0f172a; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; transition: 0.2s;"
+        onmouseover="this.style.background='#f5b041'"
+        onmouseout="this.style.background='#e6a100'"
+      >
+        {{ isLoading ? 'Prüfe Logbuch...' : 'Leinen los! ⚔️' }}
+      </button>
+
+      @if (errorMessage) {
+        <div style="color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; padding: 10px; border-radius: 6px; margin-top: 20px; font-size: 0.9rem; text-align: center;">
+          ⚠️ {{ errorMessage }}
+        </div>
+      }
+
+    </form>
+    <div style="margin-top: 25px; text-align: center; font-size: 0.85rem;">
+      <a routerLink="/register" style="color: #38bdf8; text-decoration: none;">
+        Noch kein Boot? Hier im Logbuch einschreiben!
+      </a>
+    </div>
+
+  </div>
+  </div>

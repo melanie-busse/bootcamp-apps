@@ -1,0 +1,49 @@
+.button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--button-size);
+    height: var(--button-size);
+    border: var(--border-button-close-edit);
+    border-radius: var(--border-radius-circle);
+    background: var(--color-bg-button-close-edit);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--box-shadow-button-close-edit);
+    transition: all 0.2s ease;
+    color: var(--color-text-light);
+    font-size: var(--button-font-size);
+    cursor: pointer;
+}
+
+.button:hover {
+    background: var(--box-shadow-input-submit);
+    transform: scale(1.1);
+}
+
+.delete-button {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+}
+
+.edit-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.close-edit-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.add-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.copy-btn:active {
+    transform: scale(0.98);
+}

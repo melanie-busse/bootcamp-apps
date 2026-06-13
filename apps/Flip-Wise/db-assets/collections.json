@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Biology",
+    "color": "#8B9467",
+    "icon": "GiMicroscope",
+    "owner": "default"
+  },
+  {
+    "name": "Chemistry",
+    "color": "#FFC107",
+    "icon": "GiChemicalDrop",
+    "owner": "default"
+  },
+  {
+    "name": "Geography",
+    "color": "#34A85A",
+    "icon": "GiEarthAmerica",
+    "owner": "default"
+  },
+  {
+    "name": "Math",
+    "color": "#4B5154",
+    "icon": "GiCalculator",
+    "owner": "default"
+  },
+  {
+    "name": "Physics",
+    "color": "#FFA07A",
+    "icon": "GiAtom",
+    "owner": "default"
+  },
+  {
+    "name": "Technology",
+    "color": "#456778",
+    "icon": "GiCircuitry",
+    "owner": "default"
+  },
+  {
+    "name": "Art",
+    "color": "#8F8E94",
+    "icon": "GiPaintBrush",
+    "owner": "default"
+  },
+  {
+    "name": "Music",
+    "color": "#FF69B4",
+    "icon": "GiMusicalNotes",
+    "owner": "default"
+  },
+  {
+    "name": "Dansk",
+    "color": "#E31837",
+    "icon": "GiVikingHelmet",
+    "owner": "default"
+  }
+]

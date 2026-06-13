@@ -1,0 +1,16 @@
+2. Website
+Ziel: Eine öffentlich zugängliche Website (Read-only) zum Durchsuchen von Wanderwegen und Regionen.
+
+Modelle
+regionModel.ts: getAllRegions(), getRegionBySlug(slug).
+trailModel.ts: getAllTrails(), getTrailBySlug(slug), getTrailsByRegionId(id).
+SQL: Nutze INNER JOIN, um Regionsdaten (Name, Land) direkt mit abzufragen. Verwende parameterisierte Abfragen.
+Routen & Controller
+GET /: Startseite (alle Wege).
+GET /trails/:slug: Detailansicht eines Weges.
+GET /regions: Liste aller Regionen.
+GET /regions/:slug: Region-Detailseite mit gefilterten Wegen.
+Views & Middleware
+Templates: views/index.html, trail.html, regions.html, region.html (alle erben von base.html).
+Macros: views/macros/trailCard.html für die konsistente Darstellung von Wanderwegen.
+Logger: middleware/logger.ts erstellen, um Anfragen in logs/access.log zu speichern.

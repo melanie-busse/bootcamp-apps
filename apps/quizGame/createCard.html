@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Quiz App</title>
+        <link rel="icon" href="./assets/icons/favicon.png" type="image/png" sizes="32x32">
+
+        <link rel="stylesheet" href="./css/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+
+        <script src="./js/data.js" defer></script>
+        <script src="./js/global.js" defer></script>
+        <script src="./js/card.js" defer></script>
+        <script src="./js/nav.js" defer></script>
+        <script src="./js/createCard.js" defer></script>
+    </head>
+
+    <body data-js="body">
+        <header class="header quiz-div">
+            <img src="./assets/images/tierquiz2.png" class="quiz-image" alt="Animal Quiz">
+        </header>
+
+        <main class="main">
+            <div class="quiz-card">
+                <form
+                        data-js="form"
+                        class="quiz-card__form">
+                    <div class="form-group">
+                        <label
+                                for="question"
+                                class="form-label">
+                            Question:
+                        </label>
+                        <input
+                                id="question"
+                                data-js="question"
+                                type="text"
+                                class="form-control"
+                                placeholder="Insert your question ..."
+                                maxlength="150"
+                                aria-describedby="question-counter"
+                                required />
+
+                        <div id="question-counter" class="characters--left" aria-live="polite">
+                            150 characters left
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label
+                                for="answer"
+                                class="form-label">
+                            Answer:
+                        </label>
+                        <input
+                                id="answer"
+                                data-js="answer"
+                                type="text"
+                                class="form-control"
+                                placeholder="Insert your answer ..."
+                                maxlength="150"
+                                aria-describedby="answer-counter"
+                                required />
+
+                        <div id="answer-counter" class="characters--left" aria-live="polite">
+                            150 characters left
+                        </div>
+                    </div>
+
+                    <fieldset class="quiz-card__fieldset">
+                        <legend>
+                            Possible answers:
+                        </legend>
+
+                        <div class="form-group">
+                            <label
+                                    for="possibleAnswer1"
+                                    class="form-label">
+                                First animal:
+                            </label>
+                            <input
+                                    id="possibleAnswer1"
+                                    data-js="possibleAnswer1"
+                                    name="possibleAnswer1"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Insert your first animal ..."
+                                    maxlength="150"
+                                    aria-describedby="possibleAnswer1-counter"
+                                    required />
+                            <div id="possibleAnswer1-counter" class="characters--left" aria-live="polite">
+                                150 characters left
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label
+                                    for="possibleAnswer2"
+                                    class="form-label">
+                                Second animal:
+                            </label>
+                            <input
+                                    id="possibleAnswer2"
+                                    data-js="possibleAnswer2"
+                                    name="possibleAnswer2"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Insert your second animal ..."
+                                    maxlength="150"
+                                    aria-describedby="possibleAnswer2-counter"
+                                    required />
+                            <div id="possibleAnswer2-counter" class="characters--left" aria-live="polite">
+                                150 characters left
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label
+                                    for="possibleAnswer3"
+                                    class="form-label">
+                                Third animal:
+                            </label>
+                            <input
+                                    id="possibleAnswer3"
+                                    data-js="possibleAnswer3"
+                                    name="possibleAnswer3"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Insert your third animal ..."
+                                    maxlength="150"
+                                    aria-describedby="possibleAnswer3-counter"
+                                    required />
+                            <div id="possibleAnswer3-counter" class="characters--left" aria-live="polite">
+                                150 characters left
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label
+                                    for="possibleAnswer4"
+                                    class="form-label">
+                                Forth animal:
+                            </label>
+                            <input
+                                    id="possibleAnswer4"
+                                    data-js="possibleAnswer4"
+                                    name="possibleAnswer4"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Insert your forth animal ..."
+                                    maxlength="150"
+                                    aria-describedby="possibleAnswer4-counter"
+                                    required />
+                            <div id="possibleAnswer4-counter" class="characters--left" aria-live="polite">
+                                150 characters left
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        <label for="imageUpload" class="form-label">Image upload:</label>
+                        <div class="custom-file-upload" data-js="custom-upload">
+                            <input
+                                    id="imageUpload"
+                                    name="imageUpload"
+                                    type="file"
+                                    accept="image/*"
+                                    class="file-input"
+                                    data-js="file-input"
+                                    hidden />
+                            <label for="imageUpload" class="upload-btn">
+                                📁 Select an image
+                            </label>
+                            <span class="file-name" data-js="file-name">No image selected</span>
+                            <div class="image-preview" data-js="image-preview"></div>
+                        </div>
+                    </div>
+                    <div class="quiz-card__buttons" >
+                        <button
+                                type="submit"
+                                aria-label="Create quiz card"
+                                class="button button--text">
+                            Submit
+                        </button>
+                        <button
+                                type="reset"
+                                aria-label="Reset form"
+                                class="button button--text">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        <nav aria-label="main navigation" class="nav"></nav>
+    </body>
+</html>

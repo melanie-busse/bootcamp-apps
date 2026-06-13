@@ -1,0 +1,11 @@
+.navigation {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 40px 40px 40px;
+}
+
+.navigation__pagination {
+  display: grid;
+  place-items: center;
+}

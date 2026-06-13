@@ -1,0 +1,36 @@
+.card-container {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: 1fr;
+}
+
+.card {
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: var(--color-secondary);
+}
+
+.card__image-container img {
+  display: block;
+  margin: auto;
+  max-width: 100%;
+}
+
+.card__info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+.card__content {
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card__info-description {
+  text-align: right;
+}
+
+li {
+  list-style: none;
+}

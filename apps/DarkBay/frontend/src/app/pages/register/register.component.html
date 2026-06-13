@@ -1,0 +1,57 @@
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #0f172a; font-family: sans-serif;">
+  <div style="background: #1e293b; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); width: 100%; max-width: 400px; border: 1px solid #334155;">
+
+    <h2 style="color: #ffcc00; text-align: center; margin-bottom: 30px; font-size: 1.8rem;">
+      📜 Im Logbuch einschreiben
+    </h2>
+
+    <div *ngIf="errorMessage" style="background: #ef4444; color: white; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 0.9rem;">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <div *ngIf="successMessage" style="background: #10b981; color: white; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 0.9rem;">
+      🦜 {{ successMessage }}
+    </div>
+
+    <form (ngSubmit)="onRegister()">
+      <div style="margin-bottom: 20px;">
+        <label style="color: #94a3b8; display: block; margin-bottom: 8px; font-size: 0.9rem;">Piratenname</label>
+        <input
+          type="text"
+          name="username"
+          [(ngModel)]="username"
+          style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; box-sizing: border-box;"
+          placeholder="z.B. CaptainCora"
+          [disabled]="isLoading"
+        />
+      </div>
+
+      <div style="margin-bottom: 30px;">
+        <label style="color: #94a3b8; display: block; margin-bottom: 8px; font-size: 0.9rem;">Geheimes Passwort</label>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; box-sizing: border-box;"
+          placeholder="••••••••"
+          [disabled]="isLoading"
+        />
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="isLoading"
+        style="width: 100%; padding: 14px; background: #ffcc00; color: #0f172a; font-weight: bold; font-size: 1rem; border: none; border-radius: 6px; cursor: pointer; transition: 0.2s;"
+      >
+        {{ isLoading ? 'Schreibe im Buch...' : 'Konto erstellen ⚔️' }}
+      </button>
+    </form>
+
+    <div style="margin-top: 25px; text-align: center; font-size: 0.85rem;">
+      <a routerLink="/login" style="color: #38bdf8; text-decoration: none;">
+        Bereits angeheuert? Hier geht's zur Taverne
+      </a>
+    </div>
+
+  </div>
+</div>

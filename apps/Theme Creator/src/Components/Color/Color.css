@@ -1,0 +1,134 @@
+.color-card {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: flex-start;
+    justify-content: center;
+
+    width: var(--width-color-card);
+    height: var(--height-color-card);
+    text-align: left;
+    margin: 0 1rem 1.5rem 1rem;
+    padding: 25px 50px 20px 0;
+
+    border: var(--border-color-card);
+    border-radius: var(--border-radius);
+
+    font-weight: 700;
+    font-size: 0.85rem;
+    outline: none !important;
+    outline-offset: 0 !important;
+    tab-index: -1;
+}
+
+.color-card:hover {
+    border-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.color-card div {
+    line-height: 1.1;
+}
+
+.edit-header {
+    margin-bottom: 0.5rem;
+}
+
+.colors-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    max-width: var(--max-width-container);
+    padding:0;
+}
+
+.color-display {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 60%;
+    margin-bottom: 0.25rem;
+}
+
+.color-hex {
+    flex: 1;
+    line-height: 1.1;
+
+    background: var(--color-bg-change-btn);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    border: var(--border-button);
+
+    font-size: 1.2rem;
+    font-weight: 800;
+    font-family: var(--font-family-color-headline);
+
+    tab-index: -1;
+}
+
+.color-contrast {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    /* Nicht anklickbar */
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -khtml-user-select: none !important;
+    pointer-events: none !important;
+    outline: none !important;
+}
+
+.color-role {
+    font-size: 1.0rem;
+    padding: 10px 0;
+    opacity: 0.9;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -khtml-user-select: none !important;
+    pointer-events: none !important;
+    outline: none !important;
+}
+
+.container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    pointer-events: auto !important;
+}
+
+.color-display,
+.color-role,
+.color-contrast {
+    margin-left: 20px;
+}
+
+.color-hex:focus,
+.color-hex:focus-visible,
+.color-hex:focus-within {
+    outline: none !important;
+    outline-offset: 0 !important;
+    box-shadow: none !important;
+}
+
+.color-hex:focus-visible {
+    outline: 2px solid rgba(255,255,255,0.5) !important;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.5) !important;
+}
+
+@media (max-width: 480px) {
+    .color-hex {
+        font-size: 1.1rem;
+        padding: 0.4rem 0.6rem;
+    }
+}

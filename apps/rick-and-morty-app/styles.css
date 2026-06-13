@@ -1,0 +1,87 @@
+@import "components/CharacterCard/CharacterCard.css";
+@import "components/SearchBar/SearchBar.css";
+@import "components/NavButton/NavButton.css";
+@import "components/NavPagination/NavPagination.css";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-primary: rgb(51, 51, 51);
+  --color-secondary: #f6f6f6;
+  --color-button: #007ac3;
+  --color-button-hover: #006ba8;
+  --font-family: system-ui;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--color-primary);
+  background-color: #ccc;
+}
+
+.header--content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1500px;
+  padding: 40px;
+  margin: auto;
+  position: relative;
+}
+
+header {
+  background-color: var(--color-secondary);
+  overflow: hidden;
+}
+
+.title {
+  font-size: 20px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  max-width: 1500px;
+  margin: auto;
+  padding: 40px;
+}
+
+/* responsive */
+@media (min-width: 380px) {
+  .card-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 700px) {
+  .card-container {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .title {
+    font-size: 32px;
+  }
+  .mobile-search-bar-container {
+    display: none;
+  }
+  .search-bar-container {
+    position: relative;
+    width: auto;
+    left: 0;
+  }
+  .search-bar {
+    border-radius: 10px;
+  }
+}
+@media (min-width: 1020px) {
+  .card-container {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+@media (min-width: 1340px) {
+  .card-container {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
+}

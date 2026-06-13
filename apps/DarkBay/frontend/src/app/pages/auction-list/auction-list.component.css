@@ -1,0 +1,109 @@
+/* Der große Container für die Piratenbucht */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #e0e0e0;
+}
+
+/* Epische Piraten-Überschrift */
+h2 {
+  font-size: 2.5rem;
+  color: #ffc107; /* Piratengold */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  border-bottom: 2px solid #343a40;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+}
+
+/* Das Raster für die Auktionskarten */
+.auction-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+/* Die Auktionskarte - düster wie ein Piratenschiff im Nebel */
+.auction-card {
+  background: #1e252f; /* Tiefes Dunkelblau/Grau */
+  border: 1px solid #2a3444;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.auction-card:hover {
+  transform: translateY(-5px);
+  border-color: #ffc107; /* Leuchtet golden beim Drüberfahren */
+}
+
+.auction-card h3 {
+  margin-top: 0;
+  color: #ffffff;
+  font-size: 1.4rem;
+}
+
+.auction-card p {
+  color: #a0aec0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  min-height: 60px;
+}
+
+/* Preis-Sektion: Schätze und Beute */
+.price-info {
+  display: flex;
+  flex-direction: column;
+  background: #141923;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 15px 0;
+  border-left: 4px solid #ffc107;
+}
+
+.price-info span {
+  font-size: 0.85rem;
+  color: #718096;
+}
+
+.price-info strong {
+  font-size: 1.25rem;
+  color: #4db8ff; /* Schickes Cyberspace-Blau für das aktuelle Gebot */
+  margin-top: 4px;
+}
+
+/* Die tickende Uhr */
+small {
+  display: block;
+  color: #e53e3e; /* Alarm-Rot, weil die Zeit abläuft */
+  font-weight: bold;
+  text-align: right;
+}
+
+/* Wenn die Bucht noch leer ist */
+.no-data {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #a0aec0;
+  background: #1e252f;
+  padding: 40px;
+  border-radius: 12px;
+  border: 2px dashed #2a3444;
+}
+
+/* Der stolze Piratenfisch */
+.pirate-fish {
+  font-size: 4rem;
+  margin-bottom: 15px;
+  display: inline-block;
+  animation: schwimmen 3s ease-in-out infinite;
+}
+
+/* Lässt den Fisch im Meer leicht auf und ab wiegen */
+@keyframes schwimmen {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-5deg); }
+}

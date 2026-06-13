@@ -1,0 +1,43 @@
+{
+  "name": "trail-guide",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "* **Full-Stack Integration:** Kombinieren von Routing, Middleware, MVC, Nunjucks und SQLite zu einer einzigen, funktionsfähigen Anwendung.\r * **Hybride Responses:** Bereitstellen von HTML-Seiten und JSON-Antworten aus derselben Express-App und derselben Modellschicht.\r * **Datenbank-Beziehungen:** Verwenden einer One-to-Many-Beziehung in SQLite und Auslesen der Daten mittels `INNER JOIN`.\r * **API-Security:** Schützen von Schreib-Endpunkten einer öffentlichen API durch eine Header-basierte Schlüsselprüfung.\r * **Class-less CSS:** Styling einer semantischen HTML-Seite mit [pico.css](https://picocss.com/) ohne eigene Custom-Klassen.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/app.ts",
+    "db:seed": "tsx src/seed.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MelanieB-007/Trail-Guide.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MelanieB-007/Trail-Guide/issues"
+  },
+  "homepage": "https://github.com/MelanieB-007/Trail-Guide#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "nunjucks": "^3.2.4",
+    "sanitize-html": "^2.17.3",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.2",
+    "@types/nunjucks": "^3.2.6",
+    "@types/sanitize-html": "^2.16.1",
+    "prettier": "^3.8.3",
+    "prettier-plugin-jinja-template": "^2.2.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,38 @@
+.header.quiz-div {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    width: 100vw;
+    height: 150px;
+    display: flex !important;      /* ← Flex erzwingen */
+    align-items: center !important;
+    justify-content: center !important;
+    background: linear-gradient(to bottom,
+    #5b9ef5 0%, #87CEEB 50%, #B0E0E6 100%) !important;  /* ← Gradient priorisieren */
+    box-shadow: 0 4px 6px var(--box-shadow);
+}
+
+/* EIN Overlay (kein Doppel!) */
+.header.quiz-div::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--header-gradient) !important;
+    z-index: 1;
+}
+
+.dark .header.quiz-div::before {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.quiz-image {
+    position: relative;
+    z-index: 2;
+    height: auto;
+    max-height: 140px;
+    max-width: 90%;
+    width: auto;              /* ← Auto-Skalierung */
+    filter: contrast(1.25) brightness(1.05);
+}

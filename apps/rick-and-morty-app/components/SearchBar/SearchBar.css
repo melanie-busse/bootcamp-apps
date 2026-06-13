@@ -1,0 +1,46 @@
+.search-bar-container {
+  position: absolute;
+  left: 100vw;
+  width: 100%;
+  height: 100%;
+  transition: all 0.5s ease;
+}
+
+.search-bar {
+  padding: 12px 20px;
+  background-color: var(--color-button);
+  display: grid;
+  grid-template-columns: 1fr 24px;
+  height: 100%;
+}
+
+.search-bar__input {
+  background-color: transparent;
+  border: none;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important; /* Für Autofill-Fälle in Chrome */
+}
+
+.search-bar__button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.search-bar__input:focus {
+  outline: none;
+}
+
+.search-bar__icon {
+  width: 20px;
+  filter: invert(1);
+}
+
+.mobile-search__button .search-bar__icon {
+  filter: none;
+}
+
+/*responsive*/
+.search-bar-container.visible {
+  left: 0;
+}

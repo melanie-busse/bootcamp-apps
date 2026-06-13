@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "macros/trailCard.html" import trailCard %}
+
+{% block content %}
+<header>
+    <h1>Wandern im {{ region.name }}</h1>
+    <p>Hier findest du alle Touren für diese Region.</p>
+</header>
+
+<div class="grid">
+    {% for trail in trails %}
+    {# Wir nutzen das Makro direkt. Den fehlenden regionName fixen wir im Model (bester Weg) #}
+    {{ trailCard(trail) }}
+    {% else %}
+    <p>In dieser Region gibt es noch keine eingetragenen Wege.</p>
+    {% endfor %}
+</div>
+
+<a href="/regions" class="secondary">Zurück zur Regionsübersicht</a>
+{% endblock %}

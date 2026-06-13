@@ -1,0 +1,181 @@
+.formAddButton {
+    position: relative;
+    overflow: visible;
+    width: 100%;
+    max-width: var(--width-color-card);
+    margin: 1rem auto;
+    padding: 1.5rem;
+
+    background: var(--color-bg-add-button);
+    backdrop-filter: blur(12px);
+    border-radius: var(--border-radius);
+    border: var(--border-add-button);
+    box-shadow: var(--box-shadow-add-button);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.formAddButton form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formAddButton__label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-form-label);
+}
+
+.formAddButton__input {
+    height: 35px;
+    padding: 0.75rem 1rem;
+    color: var(--color-form-label);
+    font-size: 1rem;
+
+    background: var(--color-bg-input);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    border: var(--border-input);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+}
+
+.formAddButton__input:focus {
+    outline: var(--outline-add-butto-input);
+    border-color: var(--border-color-input-focus);
+    box-shadow: var(--box-shadow-input-focus);
+}
+
+.formAddButton__input-row {
+    display: flex !important;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.formAddButton__input-row .formAddButton__input {
+    flex: 1;
+    min-width: 0;
+}
+
+.formAddButton__input--submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    height: 40px;
+    width: 200px;
+    padding: 1rem 1.5rem;
+    margin: 1rem auto 0 auto;
+    text-align: center;
+
+    color: var(--color-text-light);
+    font-weight: 700;
+    font-size: 1.1rem;
+
+    background: var(--color-bg-button-close-edit);
+    box-shadow: var(--box-shadow-input-submit);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    border-radius: var(--border-radius);
+}
+
+.formAddButton__input--submit:focus {
+    outline: none;
+}
+
+.formAddButton__input--submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-input-submit-hover);
+}
+
+.custom-color-picker {
+    position: relative;
+    display: inline-block;
+}
+
+.hidden-color-input {
+    display: none;
+}
+
+.hidden-color-input {
+    display: none !important;
+}
+
+.custom-color-picker {
+    position: relative;
+}
+
+.color-preview:hover {
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+}
+
+.color-preview:focus-within {
+    outline: 2px solid var(--color-bg-button-close-edit);
+}
+
+.hidden-color-input {
+    display: none;
+}
+
+.form-input-wrapper {
+    width: 100%;
+    max-width: 270px;
+}
+
+.custom-color-picker {
+    width: 100%;
+}
+
+.color-preview {
+    width: 100% !important;
+}
+
+.color-preview-base {
+    height: 35px;
+    padding: 0.75rem 1rem;
+    border: var(--border-input);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.color-preview-base:hover {
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+}
+
+.color-preview-base:focus-within {
+    outline: 2px solid var(--color-bg-button-close-edit);
+}
+
+@media (max-width: 480px) {
+    .formAddButton {
+        margin: 0.5rem;
+        padding: 1rem;
+    }
+
+    .formAddButton__input {
+        height: 48px;
+        font-size: 1.1rem;
+    }
+
+    .formAddButton__input-row .formAddButton__input--color {
+        width: 30px;
+        height: 48px;
+    }
+}

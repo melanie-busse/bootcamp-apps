@@ -1,0 +1,100 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color-bg-body: linear-gradient(135deg, #0a0a23 0%, #1a1a3a 50%, #2a4066 100%);
+    --color-bg-header:  rgba(0, 123, 255, 0.15);
+    --color-bg-header-hover:  rgba(0, 123, 255, 0.25);
+    --color-bg-main: linear-gradient(145deg, #00bfff 0%, #1e90ff 50%, #00bfff 100%);
+    --color-bg-footer:  rgba(0, 123, 255, 0.15);
+    --color-bg-footer-before: linear-gradient(90deg, transparent, #00ffff, transparent);
+    --color-bg-footer-hover: rgba(0, 123, 255, 0.25);
+    --color-bg-plus-toggle-btn: linear-gradient(135deg, #1e3a8a, #1e40af);
+    --color-bg-plus-toogle-btn-hover: linear-gradient(135deg, #5dade2, #3498db);
+    --color-bg-change-btn: rgba(255,255,255,0.2);
+    --color-bg-change-btn-hover: rgba(255,0,0,0.4);
+    --color-bg-empty-state: rgba(255,255,255,0.1);
+    --color-bg-add-button: rgba(255,255,255,0.1);
+    --color-bg-button-close-edit: linear-gradient(135deg, #1e3a8a, #1e40af);
+    --color-bg-button-close-edit-hover: rgba(255,0,0,0.9);
+    --color-bg-input: rgba(255, 255, 255, 0.9);
+    --color-bg-header-section: rgba(255, 255, 255, 0.12);
+
+    --border: 1px solid rgba(0, 255, 255, 0.4);
+    --border-button: 1px solid rgba(255, 255, 255, 0.3);
+    --border-button-close-edit: 2px solid rgba(255,255,255,0.6);
+    --border-add-button: 1px solid rgba(255, 255, 255, 0.2);
+    --border-input: 2px solid rgba(0, 0, 0, 0.1);
+    --border-empty-state: 2px dashed rgba(255,255,255,0.3);
+    --border-radius: 20px;
+    --border-radius-circle: 50%;
+    --border-color-input-focus: #3498db;
+    --border-color-card: 3px solid rgba(255, 255, 255, 0.4);
+
+    --box-shadow: 0 8px 32px rgba(0, 123, 255, 0.2);
+    --box-shadow-hover: 0 12px 40px var(--neon-glow);
+    --box-shadow-plus-toogle-btn: 0 4px 16px rgba(52, 152, 219, 0.4);
+    --box-shadow-plus-toogle-btn-hover: 0 6px 20px rgba(52, 152, 219, 0.6);
+    --box-shadow-button-close-edit: 0 8px 20px rgba(255,0,0,0.3);
+    --box-shadow-button-close-edit-hover: 0 10px 25px rgba(255,0,0,0.4);
+    --box-shadow-copy-btn: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --box-shadow-add-button: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --box-shadow-input-focus: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    --box-shadow-input-submit: 0 4px 12px rgba(30, 58, 138, 0.4);
+    --box-shadow-input-submit-hover: 0 4px 12px rgba(52, 152, 219, 0.4);
+
+    --outline-plus-toogle-btn: 2px solid rgba(255,255,255,0.8);
+
+    --glass-blur: blur(12px);
+    --transition-all: all 0.3s ease;
+    --neon-glow: rgba(0, 255, 255, 0.3);
+
+    --font-family: system-ui, -apple-system, sans-serif;
+    --font-family-color-headline: 'Courier New', monospace;
+    --font-family-contrast-checker: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --color-text-light: #00ffff;
+    --color-form-label: #333;
+
+    --outline-add-butto-input: 2px solid rgba(255,255,255,0.8);
+
+    --color-icon-yup: #10b981;
+    --color-icon-kinda: #f59e0b;
+    --color-icon-nope: #ef4444;
+
+    --button-size: 25px;
+    --button-font-size: 0.8em;
+
+    --max-width-container: 700px;
+    --width-color-card: 600px;
+    --height-color-card: 120px;
+}
+
+body {
+    font-family: var(--font-family);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-body);
+}
+
+.glass-container {
+    margin: 10px auto;
+    width: 90vw;
+    max-width: 380px;
+    flex-shrink: 0;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 480px) {
+    .glass-container {
+        width: 95vw;
+        margin: 8px auto;
+    }
+}

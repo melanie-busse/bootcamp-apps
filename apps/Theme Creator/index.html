@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="./src/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+  </head>
+  <body>
+    <header class="glass-container header">
+      <svg width="400" height="60" viewBox="0 0 400 60" xmlns="http://www.w3.org/2000/svg">
+        <!-- Neon T-Drop Icon -->
+        <defs>
+          <linearGradient id="neonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00bfff"/>
+            <stop offset="50%" stop-color="#1e90ff"/>
+            <stop offset="100%" stop-color="#00ffff"/>
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2.2" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <path d="M12 12 Q19 5 26 12 T37 12 V26 Q37 33 31 38 Q26 43 20 38 Q15 43 10 38 Q5 33 5 26 Z"
+              fill="url(#neonGrad)" filter="url(#glow)" stroke="#00ffff" stroke-width="1.5"/>
+
+        <text x="100" y="42" font-family="system-ui,-apple-system,sans-serif"
+              font-size="30" font-weight="800" fill="#f00ffff"
+              stroke="#00ccff" stroke-width="0.8" filter="url(#glow)"
+              letter-spacing="0.5">Theme Creator</text>
+      </svg>
+    </header>
+    <main class="glass-container main">
+      <div id="root"></div>
+      <script type="module" src="/src/main.jsx"></script>
+    </main>
+  <footer class="glass-container footer">
+    <p>&copy; 2026 Melanie Busse | Recap 4</p>
+  </footer>
+  </body>
+</html>

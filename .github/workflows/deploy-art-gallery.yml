@@ -23,20 +23,12 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # 1. Sicherstellen, dass das Verzeichnis existiert. Wenn nicht, klonen.
-            if [ ! -d "~/bootcamp-apps" ]; then
-              git clone https://github.com/${{ github.repository }}.git ~/bootcamp-apps
-            fi
+            # 1. Falls der Ordner gar nicht existiert, klonen (ohne Anführungszeichen bei der Tilde)
+            [ -d ~/bootcamp-apps ] || git clone https://github.com/${{ github.repository }}.git ~/bootcamp-apps
             
-            # 2. IMMER explizit in den Ordner wechseln
-            cd ~/bootcamp-apps
-            
-            # 3. Code absolut frisch ziehen
-            git fetch --all
-            git reset --hard origin/main
-            
-            # 4. In den spezifischen App-Ordner wechseln (hier am Beispiel art-gallery)
-            cd apps/art-gallery
-            
-            # 5. Container bauen und starten
+            # 2. In den Ordner wechseln UND Code aktualisieren UND in den App-Ordner wechseln
+            cd ~/bootcamp-apps && \
+            git fetch --all && \
+            git reset --hard origin/main && \
+            cd apps/art-gallery && \
             docker compose up -d --build --force-recreate

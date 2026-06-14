@@ -23,13 +23,20 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # 1. In den Projektordner wechseln (oder klonen, falls nicht da)
-            cd ~/bootcamp-apps || cd ~ && git clone https://github.com/${{ github.repository }}.git bootcamp-apps && cd bootcamp-apps
+            # 1. Sicherstellen, dass das Verzeichnis existiert. Wenn nicht, klonen.
+            if [ ! -d "~/bootcamp-apps" ]; then
+              git clone https://github.com/${{ github.repository }}.git ~/bootcamp-apps
+            fi
             
-            # 2. Den neuesten Code inklusive der neuen docker-compose.yml ziehen
+            # 2. IMMER explizit in den Ordner wechseln
+            cd ~/bootcamp-apps
+            
+            # 3. Code absolut frisch ziehen
             git fetch --all
             git reset --hard origin/main
             
-            # 3. Direkt in den DarkBay-Ordner wechseln und starten
-            cd apps/DarkBay
+            # 4. In den spezifischen App-Ordner wechseln (hier am Beispiel art-gallery)
+            cd apps/art-gallery
+            
+            # 5. Container bauen und starten
             docker compose up -d --build --force-recreate

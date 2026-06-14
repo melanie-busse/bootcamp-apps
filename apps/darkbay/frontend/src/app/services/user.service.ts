@@ -7,7 +7,7 @@ import {environment} from '../../environments/environment';
   providedIn: 'root',
 })
 export class UserService {
-  private baseUrl = `${environment.apiUrl}`; // Direkt auf /users gemappt
+  private baseUrl = `${environment.apiUrl}/users`; // Direkt auf /users gemappt
 
   constructor(private http: HttpClient) {}
 

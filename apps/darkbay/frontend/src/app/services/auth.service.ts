@@ -1,18 +1,20 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable, tap} from 'rxjs';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/auth'; // Deine NestJS Auth-Route
+  private baseUrl = `${environment.apiUrl}/auth`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   // Login-Methode abschicken
   login(username: string, password: string): Observable<any> {
-    return this.http.post<any>('http://localhost:3000/auth/login', { username, password }).pipe(
+    return this.http.post<any>(`${this.baseUrl}/login`, {username, password}).pipe(
       tap((response) => {
         console.log('[AuthService] Empfange Daten vom Backend:', response);
 
@@ -36,7 +38,7 @@ export class AuthService {
 
   register(username: string, password: string): Observable<any> {
     // Schickt die Daten an dein NestJS-Backend, um einen neuen User in der MariaDB anzulegen
-    return this.http.post<any>('http://localhost:3000/auth/register', { username, password });
+    return this.http.post<any>(`${this.baseUrl}/register`, {username, password});
   }
 
   // Hilfsmethode: Ist der User eingeloggt?

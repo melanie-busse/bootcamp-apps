@@ -11,7 +11,8 @@ async function bootstrap() {
 
   // WICHTIG FÜR ANGULAR: CORS aktivieren, damit das Frontend zugreifen darf
   app.enableCors({
-    origin: 'http://localhost:4200',
+      origin: 'https://darkbay.melanie-busse.de',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
 

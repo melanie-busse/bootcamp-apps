@@ -3,7 +3,7 @@ FROM node:20-alpine AS deps
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-COPY apps/Art-Gallery/package.json ./apps/Art-Gallery/
+COPY apps/art-gallery/package.json ./apps/art-gallery/
 
 RUN npm ci
 
@@ -17,7 +17,7 @@ COPY . .
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN npm run build -w apps/Art-Gallery
+RUN npm run build -w apps/art-gallery
 
 # --- STAGE 3: Minimales Produktions-Image ---
 FROM node:20-alpine AS runner

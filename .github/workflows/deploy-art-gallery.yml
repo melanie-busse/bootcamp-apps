@@ -5,9 +5,8 @@ on:
     branches:
       - main
     paths:
-      - '../../apps/art-gallery/**'
+      - 'apps/art-gallery/**' # <-- JETZT RICHTIG: Direkt ab dem Root-Verzeichnis
       - '.github/workflows/deploy-art-gallery.yml'
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

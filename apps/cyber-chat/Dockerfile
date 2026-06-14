@@ -1,24 +1,21 @@
-# 1. Eine existierende Node-Version wählen (z.B. 20 oder 22)
 FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+# 1. Kopiere die package.json gezielt aus dem cyber-chat-Ordner
+COPY apps/cyber-chat/package*.json ./
 
-# Abhängigkeiten installieren
+# 2. Abhängigkeiten installieren
 RUN npm install
 
-COPY . .
+# 3. Kopiere den gesamten Code von Cyber-Chat in den Container
+COPY apps/cyber-chat/ .
 
-# Altes dist löschen und neu bauen
+# 4. Altes dist löschen (falls vorhanden) und frisch bauen
 RUN rm -rf dist
 RUN npm run build
 
-# Zeigt uns beim Build im GitHub-Protokoll, wo die main.js genau liegt
-RUN ls -la dist
-
 EXPOSE 3000
 
-# Falls dein NestJS-Build die main.js direkt in dist/main.js ablegt,
-# passe den Pfad hier an zu: ["node", "dist/main.js"]
-CMD ["node", "dist/src/main.js"]
+# Startbefehl für NestJS
+CMD ["node", "dist/main.js"]

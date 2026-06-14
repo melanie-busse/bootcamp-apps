@@ -18,4 +18,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Startbefehl für NestJS
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]

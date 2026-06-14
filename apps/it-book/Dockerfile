@@ -2,17 +2,21 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Abhängigkeiten kopieren und installieren
-COPY package*.json ./
-RUN npm ci
+# Nur die package.json der App kopieren
+COPY package.json ./
 
-# Quellcode kopieren und Build ausführen
+# Da die package-lock im Hauptverzeichnis liegt, installieren wir hier
+# die in der package.json definierten Module direkt ohne Lock-Zwang
+RUN npm install --no-audit --progress=false
+
+# Den restlichen Quellcode der App kopieren
 COPY . .
+
+# Den Produktions-Build ausführen
 RUN npm run build
 
-# Stage 2: Produktions-Umgebung (schlankes Nginx)
+# Stage 2: Produktions-Umgebung mit Nginx
 FROM nginx:alpine
-# Kopiert die gebauten statischen Dateien (passe 'dist' an, falls dein Build-Ordner 'build' oder 'public' heißt)
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80

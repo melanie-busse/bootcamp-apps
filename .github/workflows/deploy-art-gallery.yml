@@ -1,12 +1,12 @@
-name: Deploy IT Book Library
+name: Deploy Art Gallery
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'apps/it-book/**' # <-- Löst den Build aus, wenn sich hier etwas ändert
-      - '.github/workflows/deploy-it-book.yml'
+      - '../../apps/art-gallery/**'
+      - '.github/workflows/deploy-art-gallery.yml'
 
 jobs:
   build-and-deploy:
@@ -21,14 +21,14 @@ jobs:
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }} # Nutzt deinen exakten Secret-Namen
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # 1. Falls der Haupt-Ordner gar nicht existiert, klonen
+            # 1. Falls der Ordner gar nicht existiert, klonen (ohne Anführungszeichen bei der Tilde)
             [ -d ~/bootcamp-apps ] || git clone https://github.com/${{ github.repository }}.git ~/bootcamp-apps
             
-            # 2. In den Hauptordner wechseln, Code aktualisieren und in den IT-Book-Ordner wechseln
+            # 2. In den Ordner wechseln UND Code aktualisieren UND in den App-Ordner wechseln
             cd ~/bootcamp-apps && \
             git fetch --all && \
             git reset --hard origin/main && \
-            cd apps/it-book && \
+            cd apps/art-gallery && \
             docker compose up -d --build --force-recreate

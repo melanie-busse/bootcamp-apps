@@ -1,0 +1,22 @@
+services:
+  darkbay-backend:
+    build:
+      context: ../../
+      dockerfile: apps/DarkBay/backend/Dockerfile
+    container_name: darkbay-backend-app
+    restart: always
+    ports:
+      - "3003:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+
+  darkbay-frontend:
+    build:
+      context: ../../
+      dockerfile: apps/DarkBay/frontend/Dockerfile
+    container_name: darkbay-frontend-app
+    restart: always
+    ports:
+      - "3004:80"

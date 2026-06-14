@@ -1,0 +1,35 @@
+name: Deploy DarkBay
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/DarkBay/**'
+      - '.github/workflows/deploy-darkbay.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to vServer via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # 1. In den Projektordner wechseln (oder klonen, falls nicht da)
+            cd ~/bootcamp-apps || cd ~ && git clone https://github.com/${{ github.repository }}.git bootcamp-apps && cd bootcamp-apps
+            
+            # 2. Den neuesten Code inklusive der neuen docker-compose.yml ziehen
+            git fetch --all
+            git reset --hard origin/main
+            
+            # 3. Direkt in den DarkBay-Ordner wechseln und starten
+            cd apps/DarkBay
+            docker compose up -d --build --force-recreate

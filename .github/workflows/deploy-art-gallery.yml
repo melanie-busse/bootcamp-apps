@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'apps/Art-Gallery/**'
+      - 'apps/art-gallery/**'
       - '.github/workflows/deploy-art-gallery.yml'
 
 jobs:
@@ -16,7 +16,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Wir verbinden uns direkt per SSH und überlassen dem Server das Kommando
       - name: Deploy to vServer via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -24,31 +23,10 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # 1. In das Heimatverzeichnis wechseln und Projektordner ansteuern
-            # Passe den Pfad an, falls dein Repository-Ordner auf dem Server anders heißt!
             cd ~/bootcamp-apps || cd ~ && git clone https://github.com/${{ github.repository }}.git bootcamp-apps && cd bootcamp-apps
-            
-            # 2. Den neuesten Code von GitHub ziehen
             git fetch --all
             git reset --hard origin/main
             
-            # 3. Die passende docker-compose.yml für die Art-Gallery vor Ort erstellen
-            cat << 'EOF' > apps/Art-Gallery/docker-compose.yml
-            services:
-              art-gallery:
-                build:
-                  context: ../../
-                  dockerfile: apps/Art-Gallery/Dockerfile
-                container_name: art-gallery-app
-                restart: always
-                ports:
-                  - "3001:3000"
-                environment:
-                  - NODE_ENV=production
-                  - PORT=3000
-                  - HOSTNAME=0.0.0.0
-            EOF
-            
-            # 4. In den Ordner wechseln und mit Compose direkt vor Ort bauen & starten
-            cd apps/Art-Gallery
+            # Direkt in den Ordner wechseln und mit der echten docker-compose.yml starten
+            cd apps/art-gallery
             docker compose up -d --build --force-recreate

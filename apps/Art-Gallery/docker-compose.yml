@@ -1,15 +1,11 @@
-version: '3.8'
-
 services:
   art-gallery:
-    # GitHub Actions baut das Image und wir vergeben hier den passenden Namen
-    image: art-gallery:latest
+    build:
+      context: ../../
+      dockerfile: apps/art-gallery/Dockerfile
     container_name: art-gallery-app
     restart: always
     ports:
-      # Port 3001 auf deinem Server wird an Port 3000 im Container geleitet
       - "3001:3000"
     environment:
       - NODE_ENV=production
-      - PORT=3000
-      - HOSTNAME=0.0.0.0

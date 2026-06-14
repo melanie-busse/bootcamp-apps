@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
   cyber-chat:
-    # GitHub Actions baut das Image und wir vergeben hier den passenden Namen
-    image: cyber-chat:latest
+    build:
+      context: ../../
+      dockerfile: apps/cyber-chat/Dockerfile
     container_name: cyber-chat-app
     restart: always
     ports:
-      # Port 3002 auf deinem Server wird an Port 3000 im Container geleitet
       - "3002:3000"
     environment:
       - NODE_ENV=production

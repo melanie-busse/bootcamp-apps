@@ -31,13 +31,13 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Kopiert den Monorepo-Standalone-Build
-COPY --from=builder --chown=nextjs:nodejs /app/apps/Art-Gallery/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/Art-Gallery/.next/static ./apps/Art-Gallery/.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/apps/Art-Gallery/public ./apps/Art-Gallery/public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/art-gallery/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/art-gallery/.next/static ./apps/art-gallery/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/art-gallery/public ./apps/art-gallery/public
 
 USER nextjs
 EXPOSE 3000
 
 # Durch das neue Tracing liegt die server.js jetzt wieder im Unterordner,
 # hat aber alle echten Node-Module physisch mit an Bord!
-CMD ["node", "apps/Art-Gallery/server.js"]
+CMD ["node", "apps/art-gallery/server.js"]

@@ -1,11 +1,9 @@
 name: Deploy Cyber Chat
 
-# Die Pipeline startet nur, wenn du auf 'main' pushst...
 on:
   push:
     branches:
       - main
-    # ...und sich auch wirklich im cyber-chat-Ordner etwas geändert hat!
     paths:
       - 'apps/cyber-chat/**'
       - '.github/workflows/deploy-cyber-chat.yml'
@@ -15,38 +13,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Code aus GitHub auschecken
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Docker Buildx einrichten (erlaubt optimiertes Bauen und Cachen)
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      # 3. Das Docker Image lokal auf dem GitHub-Server bauen
-      - name: Build Docker Image
-        run: |
-          docker build -t cyber-chat:latest -f apps/cyber-chat/Dockerfile .
-
-      # 4. Das Image auf deinen vServer übertragen und dort starten
-      # Hier nutzen wir deine bestehenden Secrets (deinen SSH-Key/Passwort)
       - name: Deploy to vServer via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }} # oder secrets.SERVER_PASSWORD, falls du Passwörter nutzt
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Auf dem Server in den richtigen Ordner wechseln
-            mkdir -p /var/www/cyber-chat
-            cd /var/www/cyber-chat
+            # 1. In das Heimatverzeichnis wechseln und Projektordner ansteuern
+            cd ~/bootcamp-apps || cd ~ && git clone https://github.com/${{ github.repository }}.git bootcamp-apps && cd bootcamp-apps
             
-            # Hier legen wir die docker-compose.yml auf dem Server ab, falls nicht vorhanden
-            cat << 'EOF' > docker-compose.yml
-            version: '3.8'
+            # 2. Den neuesten Code von GitHub ziehen
+            git fetch --all
+            git reset --hard origin/main
+            
+            # 3. Die passende docker-compose.yml für Cyber-Chat vor Ort erstellen
+            cat << 'EOF' > apps/cyber-chat/docker-compose.yml
             services:
               cyber-chat:
-                image: cyber-chat:latest
+                build:
+                  context: ../../
+                  dockerfile: apps/cyber-chat/Dockerfile
                 container_name: cyber-chat-app
                 restart: always
                 ports:
@@ -57,5 +47,6 @@ jobs:
                   - HOSTNAME=0.0.0.0
             EOF
             
-            # Container neu starten
-            docker compose up -d --force-recreate
+            # 4. In den Ordner wechseln und mit Compose direkt vor Ort bauen & starten
+            cd apps/cyber-chat
+            docker compose up -d --build --force-recreate

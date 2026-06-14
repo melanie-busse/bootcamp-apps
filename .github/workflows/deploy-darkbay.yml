@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'apps/DarkBay/**'
+      - 'apps/darkbay/**'
       - '.github/workflows/deploy-darkbay.yml'
 
 jobs:
@@ -35,8 +35,8 @@ jobs:
             git fetch --all
             git reset --hard origin/main
             
-            # 4. In den spezifischen App-Ordner wechseln (hier am Beispiel art-gallery)
-            cd apps/art-gallery
+            # 4. In den spezifischen App-Ordner wechseln
+            cd apps/darkbay
             
             # 5. Container bauen und starten
             docker compose up -d --build --force-recreate

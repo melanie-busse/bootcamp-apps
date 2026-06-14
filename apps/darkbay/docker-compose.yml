@@ -2,7 +2,7 @@ services:
   darkbay-backend:
     build:
       context: ../../
-      dockerfile: apps/DarkBay/backend/Dockerfile
+      dockerfile: apps/darkbay/backend/Dockerfile
     container_name: darkbay-backend-app
     restart: always
     ports:
@@ -15,7 +15,7 @@ services:
   darkbay-frontend:
     build:
       context: ../../
-      dockerfile: apps/DarkBay/frontend/Dockerfile
+      dockerfile: apps/darkbay/frontend/Dockerfile
     container_name: darkbay-frontend-app
     restart: always
     ports:

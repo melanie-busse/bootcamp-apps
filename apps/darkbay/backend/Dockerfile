@@ -3,11 +3,11 @@ FROM node:22-alpine
 WORKDIR /app
 
 # Die package.json gezielt aus dem backend-Ordner holen
-COPY apps/DarkBay/backend/package*.json ./
+COPY apps/darkbay/backend/package*.json ./
 RUN npm install
 
 # Den restlichen Backend-Code kopieren
-COPY apps/DarkBay/backend/ .
+COPY apps/darkbay/backend/ .
 
 RUN rm -rf dist
 RUN npm run build

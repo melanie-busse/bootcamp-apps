@@ -2,10 +2,10 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 
-COPY apps/DarkBay/frontend/package*.json ./
+COPY apps/darkbay/frontend/package*.json ./
 RUN npm install
 
-COPY apps/DarkBay/frontend/ .
+COPY apps/darkbay/frontend/ .
 RUN npm run build -- --configuration=production
 
 # Stage 2: Bereitstellen über Nginx

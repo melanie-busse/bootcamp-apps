@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  it-book:
+    container_name: it-book
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8082:80"
+    restart: unless-stopped

@@ -1,0 +1,14 @@
+services:
+  trail-guide:
+    container_name: trail-guide
+    build:
+      context: ../../
+      dockerfile: apps/trail-guide/Dockerfile
+    ports:
+      - "8086:3000"
+    volumes:
+      - trail_guide_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  trail_guide_data:

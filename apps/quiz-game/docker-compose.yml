@@ -1,4 +1,4 @@
-service:
+services:
   quiz-game:
     container_name: quiz-game
     build:

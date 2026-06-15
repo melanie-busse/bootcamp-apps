@@ -18,18 +18,16 @@ RUN rm -rf ./*
 # 1. HTML kopieren
 COPY --from=builder /app/index.html ./
 
-# 2. Alle CSS-Dateien flach kopieren (sucht im Root und in src)
+# 2. Alle CSS-Dateien flach kopieren (ohne || true)
 COPY --from=builder /app/*.css ./
-COPY --from=builder /app/src/*.css ./ 2>/dev/null || true
+COPY --from=builder /app/src/*.css ./
 
-# 3. Alle kompilierten JS-Dateien aus dist/build flach in den Hauptordner kopieren
-COPY --from=builder /app/dist/*.js ./ 2>/dev/null || true
-COPY --from=builder /app/build/*.js ./ 2>/dev/null || true
-COPY --from=builder /app/*.js ./ 2>/dev/null || true
+# 3. Alle kompilierten JS-Dateien flach kopieren
+# Wir nehmen einfach den kompletten dist-Ordner-Inhalt, falls er existiert
+COPY --from=builder /app/dist* ./
+COPY --from=builder /app/build* ./
 
-# 4. Die restlichen Ordner kopieren
-COPY --from=builder /app/models ./models 2>/dev/null || true
-COPY --from=builder /app/services ./services 2>/dev/null || true
+# 4. Statische Assets kopieren (falls vorhanden)
 COPY --from=builder /app/public* ./public/
 
 EXPOSE 80

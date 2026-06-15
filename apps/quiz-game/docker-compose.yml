@@ -2,7 +2,7 @@ services:
   quiz-game:
     container_name: quiz-game
     build:
-      context: ./apps/quiz-game
+      context: ./
       dockerfile: Dockerfile
     ports:
       - "8083:80"

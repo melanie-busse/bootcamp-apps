@@ -1,9 +1,13 @@
 services:
   quiz-game:
-    container_name: quiz-game
+
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: apps/quiz-game/Dockerfile
+
+    container_name: quiz-game
+    restart: unless-stopped
     ports:
       - "8083:80"
-    restart: unless-stopped
+    environment:
+      - NODE_ENV=production

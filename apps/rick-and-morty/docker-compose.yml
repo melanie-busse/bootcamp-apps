@@ -1,0 +1,9 @@
+services:
+  rick-and-morty:
+    container_name: rick-and-morty
+    build:
+      context: ../../
+      dockerfile: apps/rick-and-morty/Dockerfile
+    ports:
+      - "8084:80"
+    restart: unless-stopped

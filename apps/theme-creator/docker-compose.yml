@@ -1,0 +1,9 @@
+services:
+  theme-creator:
+    container_name: theme-creator
+    build:
+      context: ../../
+      dockerfile: apps/theme-creator/Dockerfile
+    ports:
+      - "8085:80"
+    restart: unless-stopped

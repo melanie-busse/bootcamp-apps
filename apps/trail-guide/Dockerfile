@@ -2,9 +2,11 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
+# Dependencies installieren
 COPY apps/trail-guide/package*.json ./
 RUN npm install
 
+# Komplette App kopieren und bauen
 COPY apps/trail-guide/ ./
 RUN npm run build
 
@@ -12,12 +14,13 @@ RUN npm run build
 FROM node:20-alpine
 WORKDIR /app
 
+# Nur Production-Dependencies
 COPY apps/trail-guide/package*.json ./
 RUN npm install --omit=dev
 
-# Kompilierten Code & die Views (Templates) kopieren
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/src/views ./src/views
+# Wir kopieren jetzt einfach die benötigten Ordner direkt aus dem /app-Verzeichnis des Builders
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/src/views /app/src/views
 
 # Den Daten-Ordner für die SQLite-Datenbank erstellen
 RUN mkdir -p data

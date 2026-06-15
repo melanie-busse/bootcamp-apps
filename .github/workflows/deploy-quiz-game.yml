@@ -29,4 +29,5 @@ jobs:
             git reset --hard origin/main && \
             
             # 2. Nur den neuen Quiz-Game Container bauen und restarten
+            cd apps/quiz-game && \
             docker compose up -d --build --force-recreate quiz-game

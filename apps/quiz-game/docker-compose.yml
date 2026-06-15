@@ -1,8 +1,9 @@
-quiz-game:
-  container_name: quiz-game
-  build:
-    context: ./apps/quiz-game
-    dockerfile: Dockerfile
-  ports:
-    - "8083:80"
-  restart: unless-stopped
+service:
+  quiz-game:
+    container_name: quiz-game
+    build:
+      context: ./apps/quiz-game
+      dockerfile: Dockerfile
+    ports:
+      - "8083:80"
+    restart: unless-stopped

@@ -1,4 +1,4 @@
-# Stage 1: Build-Umgebung (Kompiliert TypeScript)
+# Stage 1: Build-Umgebung (TypeScript kompilieren)
 FROM node:20-alpine AS builder
 WORKDIR /app
 
@@ -12,20 +12,25 @@ RUN npm run build
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 
-# 1. Lösche die Nginx-Standarddateien radikal, damit nichts Altes überlebt
+# Lösche die Nginx-Standarddateien radikal
 RUN rm -rf ./*
 
-# 2. Kopiere die kompilierten JavaScript-Dateien (aus dist oder build)
-# Je nachdem, wohin dein tsc-Compiler die JS-Dateien wirft:
-COPY --from=builder /app/dist ./ 2>/dev/null || COPY --from=builder /app/build ./ 2>/dev/null || true
-
-# 3. WICHTIG: Kopiere die statische index.html und CSS-Dateien aus dem Quellordner,
-# falls sie vom Build-Skript nicht automatisch kopiert wurden.
+# WICHTIG: Die index.html aus dem Hauptverzeichnis kopieren
 COPY --from=builder /app/index.html ./
-COPY --from=builder /app/*.css ./ 2>/dev/null || true
-COPY --from=builder /app/public/ ./ 2>/dev/null || true
-COPY --from=builder /app/models ./models 2>/dev/null || true
-COPY --from=builder /app/services ./services 2>/dev/null || true
+
+# Trick mit Wildcard: Kopiert den Inhalt von dist oder build, falls sie existieren.
+# Wenn sie leer sind, stürzt Docker dank des Sternchens nicht ab.
+COPY --from=builder /app/dist* ./
+COPY --from=builder /app/build* ./
+
+# CSS-Dateien kopieren (falls vorhanden)
+COPY --from=builder /app/*.css ./
+
+# Ganze Verzeichnisse kopieren (falls vorhanden)
+# Durch den Punkt am Ende kopiert Docker das Verzeichnis nur, wenn es da ist.
+COPY --from=builder /app/public* ./public/
+COPY --from=builder /app/models* ./models/
+COPY --from=builder /app/services* ./services/
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

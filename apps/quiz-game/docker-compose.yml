@@ -1,10 +1,8 @@
 services:
   quiz-game:
-
     build:
       context: ../../
       dockerfile: apps/quiz-game/Dockerfile
-
     container_name: quiz-game
     restart: unless-stopped
     ports:

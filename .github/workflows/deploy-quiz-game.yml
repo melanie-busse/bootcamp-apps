@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'apps/quizGame/**'
+      - 'apps/quiz-game/**'
       - 'docker-compose.yml'
       - '.github/workflows/deploy-quiz-game.yml'
 

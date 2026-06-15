@@ -12,7 +12,7 @@ services:
 
   bookmonkey-api:
     build:
-      dockerfile: apps/it-book/Dockerfile
+      dockerfile: Dockerfile
     container_name: bookmonkey-api
     restart: always
     ports:

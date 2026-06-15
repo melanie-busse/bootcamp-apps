@@ -1,7 +1,7 @@
 import { Book } from "./models/Book.js";
 import {getFavorites, toggleFavorite, updateNavCount} from "./services/favorites-service.js";
 
-const API_URL = "http://localhost:4730/books";
+const API_URL = "https://api-bookmonkey.melanie-busse.de/books";
 
 const tableBody = document.querySelector("tbody") as HTMLTableSectionElement;
 const countDisplay = document.querySelector("h2") as HTMLHeadingElement;

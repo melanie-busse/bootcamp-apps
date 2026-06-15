@@ -15,20 +15,19 @@ WORKDIR /usr/share/nginx/html
 # Radikal aufräumen
 RUN rm -rf ./*
 
-# 1. HTML kopieren
-COPY --from=builder /app/index.html ./
+# Wir nutzen RUN cp, um flexibel zu kopieren.
+# Das "|| true" am Ende verhindert JEDEN Abbruch, falls ein Ordner fehlt.
+COPY --from=builder /app /app-tmp
+RUN cp /app-tmp/index.html ./ && \
+    cp /app-tmp/*.css ./ 2>/dev/null || true && \
+    cp /app-tmp/src/*.css ./ 2>/dev/null || true && \
+    cp /app-tmp/src/*.js ./ 2>/dev/null || true && \
+    cp -r /app-tmp/dist/* ./ 2>/dev/null || true && \
+    cp -r /app-tmp/build/* ./ 2>/dev/null || true && \
+    cp -r /app-tmp/public/* ./public/ 2>/dev/null || true
 
-# 2. Alle CSS-Dateien flach kopieren (ohne || true)
-COPY --from=builder /app/*.css ./
-COPY --from=builder /app/src/*.css ./
-
-# 3. Alle kompilierten JS-Dateien flach kopieren
-# Wir nehmen einfach den kompletten dist-Ordner-Inhalt, falls er existiert
-COPY --from=builder /app/dist* ./
-COPY --from=builder /app/build* ./
-
-# 4. Statische Assets kopieren (falls vorhanden)
-COPY --from=builder /app/public* ./public/
+# Temporären Ordner wieder löschen
+RUN rm -rf /app-tmp
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

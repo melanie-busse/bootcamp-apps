@@ -1,6 +1,6 @@
 import { Book } from "./models/Book.js";
 
-const API_BASE_URL = "http://localhost:4730/books";
+const API_BASE_URL = "https://api-bookmonkey.melanie-busse.de/books";
 
 const titleDisplay = document.querySelector("#book-title") as HTMLHeadingElement;
 const abstractDisplay = document.querySelector("#book-abstract") as HTMLElement;

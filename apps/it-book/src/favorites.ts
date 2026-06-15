@@ -1,7 +1,7 @@
 import { Book } from "./models/Book.js";
 import { getFavorites, toggleFavorite, updateNavCount } from "./services/favorites-service.js";
 
-const API_URL = "http://localhost:4730/books";
+const API_BASE_URL = "https://api-bookmonkey.melanie-busse.de/books";
 
 const tableBody = document.querySelector("tbody") as HTMLTableSectionElement;
 const headline = document.querySelector("h2") as HTMLHeadingElement;
@@ -13,7 +13,7 @@ async function loadFavorites() {
     const favoriteIsbns = getFavorites();
 
     try {
-        const response = await fetch(API_URL);
+        const response = await fetch(API_BASE_URL);
         const allBooks: Book[] = await response.json();
         allFavoritesBooks = allBooks.filter(book => favoriteIsbns.includes(book.isbn));
 

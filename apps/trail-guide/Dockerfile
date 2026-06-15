@@ -9,8 +9,8 @@ RUN npm install
 # Komplette App kopieren
 COPY apps/trail-guide/ ./
 
-# Hier zwingen wir tsc, die Ausgabe in den Ordner "dist" zu schreiben!
-RUN ./node_modules/.bin/tsc --outDir dist
+# Hier zwingen wir tsc zu klaren Pfaden für Input und Output!
+RUN ./node_modules/.bin/tsc --rootDir src --outDir dist
 
 # Step 2: Das schlanke Produktions-Image
 FROM node:20-alpine
@@ -19,7 +19,7 @@ WORKDIR /app
 COPY apps/trail-guide/package*.json ./
 RUN npm install --omit=dev
 
-# Jetzt existiert der Ordner zu 100%
+# Jetzt existiert der Ordner garantiert sauber strukturiert
 COPY --from=builder /app/dist ./dist
 
 # Kopiere die statischen Assets und Views

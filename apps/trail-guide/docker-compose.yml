@@ -5,7 +5,7 @@ services:
       context: ../../
       dockerfile: apps/trail-guide/Dockerfile
     ports:
-      - "8086:3000"
+      - "3006:3000"
     volumes:
       - trail_guide_data:/app/data
     restart: unless-stopped

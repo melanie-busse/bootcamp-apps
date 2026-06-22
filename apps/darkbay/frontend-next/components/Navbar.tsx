@@ -29,6 +29,9 @@ export default async function Navbar() {
                             <Link href="/auctions/create" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                                 Auktion erstellen
                             </Link>
+                            <Link href="/watchlist" className="text-sm font-medium transition-colors hover:text-primary">
+                                ⭐ Merkliste
+                            </Link>
                             <form action={logoutAction}>
                                 <Button variant="destructive" size="sm" type="submit">
                                     Logout

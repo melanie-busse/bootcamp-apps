@@ -28,15 +28,16 @@ jobs:
               git clone https://github.com/${{ github.repository }}.git ~/bootcamp-apps
             fi
             
-            # 2. IMMER explizit in den Ordner wechseln
+            # 2. In das Hauptverzeichnis wechseln
             cd ~/bootcamp-apps
             
-            # 3. Code absolut frisch ziehen
-            git fetch --all
+            # 3. Code absolut frisch ziehen und lokale Änderungen verwerfen
+            git fetch origin main
             git reset --hard origin/main
             
-            # 4. In den spezifischen App-Ordner wechseln
+            # 4. In den spezifischen DarkBay-Ordner wechseln, wo die docker-compose.yml liegt
             cd apps/darkbay
             
-            # 5. Container bauen und starten
-            docker compose up -d --build --force-recreate
+            # 5. Alle drei Container (Backend, Angular, Next.js) isoliert bauen und im Hintergrund starten
+            docker compose down
+            docker compose up -d --build

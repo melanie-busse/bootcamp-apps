@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   darkbay-backend:
     build:
@@ -12,11 +14,24 @@ services:
       - PORT=3000
       - HOSTNAME=0.0.0.0
 
-  darkbay-frontend:
+  darkbay-frontend-angular:
     build:
       context: ../../
-      dockerfile: frontend-angular/Dockerfile
+      dockerfile: frontend-angular/Dockerfile # Stelle sicher, dass der Pfad relativ zu ../../ stimmt
     container_name: darkbay-frontend-app
     restart: always
     ports:
-      - "3004:80"
+      - "3004:80" # Der verwaiste Bindestrich wurde entfernt
+
+  darkbay-frontend-next:
+    container_name: darkbay-frontend-next
+    build:
+      context: ../../
+      dockerfile: apps/darkbay/frontend-next/Dockerfile
+    ports:
+      - "3001:3000" # Außen erreichbar unter Port 3001
+    environment:
+      - DARKBAY_API_URL=http://darkbay-backend:3000 # Kommuniziert intern über das Docker-Netzwerk auf Port 3000
+    restart: always
+    depends_on:
+      - darkbay-backend # Wartet, bis der Backend-Service gestartet ist

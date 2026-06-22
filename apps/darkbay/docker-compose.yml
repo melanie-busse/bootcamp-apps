@@ -15,7 +15,7 @@ services:
   darkbay-frontend:
     build:
       context: ../../
-      dockerfile: apps/darkbay/frontend/Dockerfile
+      dockerfile: frontend-angular/Dockerfile
     container_name: darkbay-frontend-app
     restart: always
     ports:

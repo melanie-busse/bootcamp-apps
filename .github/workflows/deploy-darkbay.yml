@@ -35,9 +35,9 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             
-            # 4. In den spezifischen DarkBay-Ordner wechseln, wo die docker-compose.yml liegt
+            # 4. In den spezifischen DarkBay-Ordner wechseln
             cd apps/darkbay
             
-            # 5. Alle drei Container (Backend, Angular, Next.js) isoliert bauen und im Hintergrund starten
-            docker compose down
+            # 5. Container stoppen, alte Netzwerke wegräumen und frisch bauen
+            docker compose down --remove-orphans
             docker compose up -d --build

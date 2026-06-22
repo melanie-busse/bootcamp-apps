@@ -4,6 +4,8 @@ import { getAuctionById, getOffersForAuction } from "@/lib/auctionsService";
 import { isAuthenticated } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import BidForm from "@/components/BidForm";
+import { getWatchlist } from "@/lib/watchlistActions";
+import { WatchlistButton } from "@/components/WatchlistButton"; // <-- Import hinzufügen!
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -11,22 +13,27 @@ interface PageProps {
 
 export default async function AuctionDetailPage({ params }: PageProps) {
     const { id } = await params;
+    const auctionIdNumeric = Number(id); // <-- Zu Number konvertieren für den DTO-Vergleich
 
     let auction;
     let offers = [];
+    let isWatched = false; // <-- Hier oben definieren
     const loggedIn = await isAuthenticated();
 
     try {
-        // Paralleles Laden der Auktions- und Gebotsdaten
-        const [auctionData, offersData] = await Promise.all([
+        // Paralleles Laden aller Serverdaten
+        const [auctionData, offersData, watchlist] = await Promise.all([
             getAuctionById(id),
-            getOffersForAuction(id)
+            getOffersForAuction(id),
+            getWatchlist() // <-- Läuft jetzt auch parallel mit!
         ]);
 
         auction = auctionData;
         offers = Array.isArray(offersData) ? offersData : [];
+
+        // Jetzt greift der Vergleich sauber mit Zahlen
+        isWatched = watchlist.some((item: any) => item.id === auctionIdNumeric);
     } catch (error) {
-        // Wenn die Auktion nicht existiert, Next.js 404 auslösen
         notFound();
     }
 
@@ -34,14 +41,23 @@ export default async function AuctionDetailPage({ params }: PageProps) {
         <div className="container mx-auto p-6 max-w-4xl space-y-6">
             <Card className="border-border bg-card">
                 <CardHeader>
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <CardTitle className="text-3xl font-bold">{auction.title}</CardTitle>
-                            <CardDescription className="mt-2 text-sm">
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                        <div className="space-y-2">
+                            <div className="flex flex-wrap items-center gap-3">
+                                <CardTitle className="text-3xl font-bold">{auction.title}</CardTitle>
+                                {/* Wenn der User eingeloggt ist, zeigen wir den Merklisten-Button */}
+                                {loggedIn && (
+                                    <WatchlistButton
+                                        auctionId={auctionIdNumeric}
+                                        initialIsWatched={isWatched}
+                                    />
+                                )}
+                            </div>
+                            <CardDescription className="text-sm">
                                 Endet am: {new Date(auction.endDate).toLocaleString("de-DE")}
                             </CardDescription>
                         </div>
-                        <div className="text-right">
+                        <div className="text-left sm:text-right">
                             <p className="text-sm text-muted-foreground">Aktuelles Gebot</p>
                             <p className="text-3xl font-extrabold text-primary">{auction.currentPrice} €</p>
                             <p className="text-xs text-muted-foreground mt-1">Startpreis: {auction.startPrice} €</p>
@@ -90,8 +106,8 @@ export default async function AuctionDetailPage({ params }: PageProps) {
                                         <div>
                                             <span className="font-semibold block">Bieter #{offer.bidder || "Anonym"}</span>
                                             <span className="text-xs text-muted-foreground">
-                        {new Date(offer.createdAt).toLocaleString("de-DE")}
-                      </span>
+                                                {new Date(offer.createdAt).toLocaleString("de-DE")}
+                                            </span>
                                         </div>
                                         <span className="font-bold text-foreground text-base">{offer.amount} €</span>
                                     </div>

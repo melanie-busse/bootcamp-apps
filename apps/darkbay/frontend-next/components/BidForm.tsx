@@ -39,7 +39,7 @@ export default function BidForm({ auctionId, currentPrice }: BidFormProps) {
       )}
 
       <div className="space-y-2">
-        <label htmlFor="amount" className="text-sm font-medium">
+        <label htmlFor="amount" className="block mb-2 uppercase text-sm font-medium">
           Dein Gebot (€)
         </label>
         <Input
@@ -50,9 +50,10 @@ export default function BidForm({ auctionId, currentPrice }: BidFormProps) {
           placeholder={`${currentPrice + 5}`}
           required
           disabled={isPending}
+          className="bg-stone-950/60 border-stone-700 text-stone-100 placeholder:text-stone-500 focus-visible:ring-amber-500 focus-visible:border-amber-500"
         />
       </div>
-      <Button type="submit" className="w-full" disabled={isPending}>
+      <Button type="submit" className="w-full bg-amber-500" disabled={isPending}>
         {isPending ? "Sende Gebot..." : "Gebot verbindlich abgeben"}
       </Button>
     </form>

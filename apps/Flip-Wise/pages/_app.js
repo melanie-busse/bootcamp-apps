@@ -21,7 +21,12 @@ export default function App({
             fetch(resource, init).then((res) => res.json()),
         }}
       >
-        <SessionProvider session={session}>
+        {/* HIER AKTIVIERT: Hintergrund-Refresh für das Token */}
+        <SessionProvider
+          session={session}
+          refetchInterval={5 * 60} // Prüft alle 5 Minuten im Hintergrund
+          refetchOnWindowFocus={true} // Holt ein frisches Token, wenn du den Tab wieder anklickst
+        >
           <Header
             onMenuOpen={() => setIsMenuOpen(!isMenuOpen)}
             isOpen={isMenuOpen}
@@ -49,7 +54,6 @@ const StyledMain = styled.main`
   padding: 3rem 2rem;
   z-index: 1;
   overflow: visible;
-  background-color: #d4f5ee;
   backdrop-filter: blur(10px);
   border: 2pt solid rgba(255, 255, 255, 0.3);
   border-radius: 20px;

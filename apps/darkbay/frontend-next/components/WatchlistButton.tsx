@@ -30,12 +30,27 @@ export function WatchlistButton({ auctionId, initialIsWatched }: WatchlistButton
 
   return (
     <Button
-      variant={isWatched ? "destructive" : "secondary"}
+      variant="secondary"
       onClick={handleToggle}
       disabled={isPending}
-      className="w-full sm:w-auto"
+      className={`w-full sm:w-auto font-bold rounded-xl shadow-md border transition-all transition-colors duration-200
+      ${
+        isWatched
+          ? "bg-stone-900 text-stone-100 border-stone-800 hover:bg-stone-800"
+          : "bg-stone-900 text-stone-100 border-stone-800 hover:bg-stone-800"
+      }`}
     >
-      {isPending ? "Lädt..." : isWatched ? "❌ Von Merkliste entfernen" : "⭐ Auf die Merkliste"}
+      {isPending ? (
+        "Lädt..."
+      ) : isWatched ? (
+        <span className="flex items-center gap-2">
+          <span className="text-rose-500 text-lg leading-none">★</span> Von Merkliste entfernen
+        </span>
+      ) : (
+        <span className="flex items-center gap-2">
+          <span className="text-amber-400 text-lg leading-none">★</span> Auf die Merkliste
+        </span>
+      )}
     </Button>
   )
 }

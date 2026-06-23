@@ -37,7 +37,8 @@ export default async function AuctionDetailPage({ params }: PageProps) {
 
   return (
     <div className="container mx-auto p-6 max-w-5xl space-y-8 ">
-      <div className="w-full bg-[url('/images/pergament.jpg')] bg-size-[100%_100%] bg-no-repeat shadow-2xl pt-32 pb-16 px-12 md:px-24 min-h-800 flex flex-col justify-between relative">
+      {/* Hier ist die korrekte min-h-[800px] und die gefixte Background-Size */}
+      <div className="w-full bg-[url('/images/pergament.jpg')] bg-[length:100%_100%] bg-no-repeat shadow-2xl pt-32 pb-16 px-12 md:px-24 min-h-[800px] flex flex-col justify-between relative">
         <Card className="border-none bg-transparent shadow-none h-full flex flex-col grow">
           <CardHeader className="p-0 pb-6 relative shrink-0">
             {loggedIn && (
@@ -64,7 +65,7 @@ export default async function AuctionDetailPage({ params }: PageProps) {
               </p>
             </div>
 
-            <div className="w-full md:w-auto text-center bg-stone-900/5 py-5 px-4 rounded-2xl border border-stone-900/10 backdrop-blur-xs min-w-170 md:max-w-200 shrink-0 flex flex-col justify-center items-center">
+            <div className="w-full md:w-auto text-center bg-stone-900/5 py-5 px-4 rounded-2xl border border-stone-900/10 backdrop-blur-xs min-w-[170px] md:max-w-[200px] shrink-0 flex flex-col justify-center items-center">
               <p className="text-xs uppercase tracking-wider text-stone-600 font-bold leading-none mb-1">
                 Aktuelles Gebot
               </p>
@@ -120,7 +121,8 @@ export default async function AuctionDetailPage({ params }: PageProps) {
                 Noch keine Gebote abgegeben.
               </p>
             ) : (
-              <div className="space-y-3 max-h-300 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-stone-700">
+              /* max-h-300 wurde hier zu max-h-[300px] korrigiert */
+              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-stone-700">
                 {offers.map((offer: any) => (
                   <div
                     key={offer.id}

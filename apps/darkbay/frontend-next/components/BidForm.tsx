@@ -22,37 +22,40 @@ export default function BidForm({ auctionId, currentPrice }: BidFormProps) {
     }, [state]);
 
     return (
-        <form action={formAction} ref={formRef} className="space-y-4">
-            <input type="hidden" name="auctionId" value={auctionId} />
-            <input type="hidden" name="currentPrice" value={currentPrice} />
+      <form action={formAction} ref={formRef} className="space-y-4">
+        <input type="hidden" name="auctionId" value={auctionId} />
+        <input type="hidden" name="currentPrice" value={currentPrice} />
 
-            {state?.error && (
-                <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive font-medium">
-                    {state.error}
-                </div>
-            )}
+        {state?.error && (
+          <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive font-medium">
+            {state.error}
+          </div>
+        )}
 
-            {state?.success && (
-                <div className="rounded-md bg-green-500/15 p-3 text-sm text-green-500 font-medium">
-                    Gebot erfolgreich abgegeben!
-                </div>
-            )}
+        {state?.success && (
+          <div className="rounded-md bg-green-500/15 p-3 text-sm text-green-500 font-medium">
+            Gebot erfolgreich abgegeben!
+          </div>
+        )}
 
-            <div className="space-y-2">
-                <label htmlFor="amount" className="text-sm font-medium">Dein Gebot (€)</label>
-                <Input
-                    id="amount"
-                    name="amount"
-                    type="number"
-                    min={currentPrice + 1}
-                    placeholder={`${currentPrice + 5}`}
-                    required
-                    disabled={isPending}
-                />
-            </div>
-            <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? "Sende Gebot..." : "Gebot verbindlich abgeben"}
-            </Button>
-        </form>
-    );
+        <div className="space-y-2">
+          <label htmlFor="amount" className="block mb-2 text-sm font-medium">
+            Dein Gebot (€)
+          </label>
+          <Input
+            id="amount"
+            name="amount"
+            type="number"
+            min={currentPrice + 1}
+            placeholder={`${currentPrice + 5}`}
+            required
+            disabled={isPending}
+          />
+        </div>
+        <Button type="submit"
+        className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-stone-950 font-black uppercase tracking-wider py-3 px-6 rounded-xl shadow-md transition-all text-sm transform hover:scale-[1.01]" disabled={isPending}>
+          {isPending ? "Sende Gebot..." : "Gebot verbindlich abgeben"}
+        </Button>
+      </form>
+    )
 }

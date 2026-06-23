@@ -29,7 +29,7 @@ export default async function Navbar() {
           <span className="text-xl font-black tracking-wider text-primary uppercase transition-colors group-hover:text-primary/80">
             Next<span className="text-foreground">Bay</span>
           </span>
-        </Link>
+                </Link>
 
 
         {/* Navigation & Auth */}

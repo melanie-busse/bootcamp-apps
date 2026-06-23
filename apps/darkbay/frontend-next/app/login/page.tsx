@@ -18,24 +18,37 @@ import { Input } from "@/components/ui/input"
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, null)
 
+  const inputClasses =
+    "bg-stone-950/60 border-stone-700 text-stone-100 placeholder:text-stone-500 focus-visible:ring-amber-500 focus-visible:border-amber-500 rounded-xl"
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-md border-border bg-card shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-foreground">NextBay Login</CardTitle>
-          <CardDescription>Tritt ein in den Untergrund-Marktplatz.</CardDescription>
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <Card
+        className="w-full max-w-md border-none bg-cover bg-center bg-no-repeat text-stone-100 shadow-2xl rounded-2xl border border-stone-800"
+        style={{ backgroundImage: "url('/images/schiefer-hintergrund.jpg')" }}
+      >
+        <CardHeader className="p-6 sm:p-8 pb-4 text-center">
+          <CardTitle className="text-2xl font-black uppercase tracking-wide text-amber-500">
+            NextBay Login
+          </CardTitle>
+          <CardDescription className="text-stone-300 font-medium mt-1">
+            Tritt ein in den Untergrund-Marktplatz.
+          </CardDescription>
         </CardHeader>
 
         <form action={formAction}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5 p-6 sm:p-8 pt-0">
             {state?.error && (
-              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive font-medium">
+              <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-3 text-sm text-rose-400 font-semibold text-center">
                 {state.error}
               </div>
             )}
 
             <div className="space-y-2">
-              <label htmlFor="username" className="text-sm font-medium text-foreground">
+              <label
+                htmlFor="username"
+                className="block mb-2 text-xs uppercase tracking-wider text-stone-300 font-bold"
+              >
                 Benutzername
               </label>
               <Input
@@ -45,11 +58,14 @@ export default function LoginPage() {
                 placeholder="Dein Handle"
                 required
                 disabled={isPending}
+                className={inputClasses}
               />
             </div>
-
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium text-foreground">
+              <label
+                htmlFor="password"
+                className="block mb-2 text-xs uppercase tracking-wider text-stone-300 font-bold"
+              >
                 Passwort
               </label>
               <Input
@@ -59,18 +75,26 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 required
                 disabled={isPending}
+                className={inputClasses}
               />
             </div>
           </CardContent>
 
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={isPending}>
+          <CardFooter className="flex flex-col gap-4 p-6 sm:p-8 pt-0">
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full bg-amber-500 hover:bg-amber-600 text-stone-950 font-black uppercase tracking-wider py-3 rounded-xl shadow-md transition-all text-sm transform hover:scale-[1.01]"
+            >
               {isPending ? "Logge ein..." : "Anmelden"}
             </Button>
 
-            <p className="text-xs text-center text-muted-foreground">
+            <p className="text-xs text-center text-stone-300 font-medium">
               Noch kein Profil?{" "}
-              <Link href="/register" className="text-primary underline hover:text-primary/90">
+              <Link
+                href="/register"
+                className="text-amber-400 font-bold underline hover:text-amber-300 transition-colors"
+              >
                 Jetzt registrieren
               </Link>
             </p>

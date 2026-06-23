@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="de" className="dark">
       <body
-        className={`${geist.variable} font-sans antialiased min-h-screen flex flex-col bg-background text-foreground`}
+        className={`${geist.variable} font-sans antialiased min-h-screen flex flex-col bg-[url('/images/holz-hintergrund.jpg')] bg-cover bg-fixed bg-center text-foreground`}
       >
         <Navbar />
         <main className="flex-1">{children}</main>

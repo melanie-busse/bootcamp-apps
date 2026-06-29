@@ -19,9 +19,8 @@ jobs:
       - name: Node.js einrichten (Node 22 LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 22  # Auf Node 22 aktualisiert, um die Warnung zu killen
-          cache: 'npm'
-          cache-dependency-path: 'apps/hide-and-seek/backend/package-lock.json' # Präziser Pfad fürs Caching
+          node-version: 22
+          # Caching hier entfernt, um Pfad-Fehler im Monorepo zu vermeiden
 
       - name: Dependencies installieren
         run: npm ci
@@ -41,9 +40,7 @@ jobs:
       - name: Node.js einrichten (Node 22 LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 22  # Auf Node 22 aktualisiert
-          cache: 'npm'
-          cache-dependency-path: 'apps/hide-and-seek/frontend/package-lock.json' # Präziser Pfad fürs Caching
+          node-version: 22
 
       - name: Dependencies installieren
         run: npm ci

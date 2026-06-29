@@ -27,7 +27,7 @@ interface GameState {
   winner: "seeker" | "hider" | null;
 }
 
-let socket: Socket; // Socket außerhalb definieren, damit der Event-Listener Zugriff hat
+let socket: Socket;
 
 export default function App() {
   const [status, setStatus] = useState<MatchStatus>("connecting");
@@ -134,14 +134,12 @@ export default function App() {
         const showHider =
           role === "hider" || gameState.status === "finished" || isRadarActive;
 
-        // 1. SCHRITT: Basis-Hintergrundfarbe der Zelle bestimmen
         let bgColor = "#fafafa";
         if (isWall) bgColor = "#555555";
         else if (hasPortal) bgColor = "#a855f7";
         else if (isIce) bgColor = "#a5f3fc";
         else if (isSand) bgColor = "#fef08a";
 
-        // 2. SCHRITT: Wenn ein SICHTBARER Spieler auf der Zelle steht, überschreibe die Farbe
         if (isSeeker) bgColor = "#f44336";
         else if (isHider && showHider) bgColor = "#4caf50";
 
@@ -160,7 +158,6 @@ export default function App() {
               boxShadow: hasPortal ? "0 0 8px #a855f7 inset" : "none",
             }}
           >
-            {/* 3. SCHRITT: Inhalt mit korrekter Priorität rendern */}
             {isSeeker && "🔍"}
             {/* Der Verstecker wird nur gerendert, wenn er für diesen Client sichtbar sein soll */}
             {!isSeeker && isHider && showHider && "📦"}

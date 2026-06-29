@@ -5,7 +5,6 @@ export interface Position {
   y: number;
 }
 
-// 🌀 Interface für ein Portal-Paar
 export interface PortalPair {
   p1: Position;
   p2: Position;
@@ -20,9 +19,9 @@ export interface GameState {
   walls: Position[];
   iceCells: Position[];
   sandCells: Position[];
-  portals: PortalPair[]; // 🌀 Neu im State
-  radarItem: Position | null; // 📡 Das Item auf dem Feld (null, wenn eingesammelt)
-  radarActiveUntil: number; // 📡 Zeitstempel, bis wann der Sucher den Hider sehen kann (in ms)
+  portals: PortalPair[];
+  radarItem: Position | null;
+  radarActiveUntil: number;
   timeLeft: number;
   status: 'waiting' | 'running' | 'finished';
   winner: 'seeker' | 'hider' | null;

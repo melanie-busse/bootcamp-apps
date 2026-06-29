@@ -1,0 +1,18 @@
+{
+  "name": "hide-and-seek",
+  "version": "1.0.0",
+  "description": "In diesem Recap-Projekt baust du ein Hide-and-Seek-Spiel (Verstecken-Spiel) für zwei Spieler. Gespielt wird auf einem Grid aus Zellen, auf dem sich jeder Spieler in Echtzeit Zelle für Zelle bewegen kann. Wenn es dem suchenden Spieler gelingt, auf das Feld zu ziehen, auf dem sich der andere Spieler befindet, gewinnt er. Wenn es dem versteckenden Spieler gelingt, dem anderen Spieler auszuweichen, bis der Timer abläuft, gewinnt er.",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm --prefix backend run start:dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

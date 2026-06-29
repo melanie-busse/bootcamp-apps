@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
+type MatchStatus = "connecting" | "waiting" | "start";
+
 export default function App() {
-  const [serverMessage, setServerMessage] = useState<string>(
-    "Warte auf Server-Antwort..."
-  );
+  const [status, setStatus] = useState<MatchStatus>("connecting");
+  const [role, setRole] = useState<"seeker" | "hider" | null>(null);
+  const [message, setMessage] = useState<string>("Verbinde zum Server...");
 
   useEffect(() => {
-    // Verbindung zum NestJS Backend aufbauen
     const socket: Socket = io("http://localhost:3000");
 
-    socket.on("connect", () => {
-      console.log("[Frontend] Verbunden! Socket-ID:", socket.id);
+    socket.on(
+      "match_status",
+      (data: {
+        status: MatchStatus;
+        role?: "seeker" | "hider";
+        message?: string;
+      }) => {
+        setStatus(data.status);
+        if (data.message) setMessage(data.message);
+        if (data.role) setRole(data.role);
+      }
+    );
 
-      // Event an den Server senden
-      socket.emit("ping_test", { message: "Hallo vom Vite-Client! 👋" });
-    });
-
-    // Auf die Antwort vom Server hören
-    socket.on("pong_test", (data: { message: string }) => {
-      console.log("[Frontend] Antwort erhalten:", data);
-      setServerMessage(data.message);
-    });
-
-    // Verbindung trennen, wenn die Komponente unmountet
     return () => {
       socket.disconnect();
     };
@@ -34,18 +34,42 @@ export default function App() {
       style={{ padding: "2rem", fontFamily: "sans-serif", textAlign: "center" }}
     >
       <h1>Hide & Seek 🙈</h1>
-      <p>Schau in deine Browser-Konsole und ins Terminal!</p>
-      <div
-        style={{
-          padding: "1rem",
-          background: "#e0f7fa",
-          borderRadius: "8px",
-          display: "inline-block",
-          marginTop: "1rem",
-        }}
-      >
-        <strong>Server-Antwort:</strong> {serverMessage}
-      </div>
+
+      {status === "connecting" && <p>{message}</p>}
+
+      {status === "waiting" && (
+        <div
+          style={{
+            padding: "1.5rem",
+            background: "#fff3e0",
+            borderRadius: "8px",
+            display: "inline-block",
+          }}
+        >
+          <h3>{message}</h3>
+        </div>
+      )}
+
+      {status === "start" && (
+        <div
+          style={{
+            padding: "2rem",
+            background: role === "seeker" ? "#ffebee" : "#e8f5e9",
+            border: `2px solid ${role === "seeker" ? "#f44336" : "#4caf50"}`,
+            borderRadius: "8px",
+            display: "inline-block",
+          }}
+        >
+          <h2>Spiel gestartet! 🎉</h2>
+          <p style={{ fontSize: "1.25rem" }}>
+            Deine Rolle:{" "}
+            <strong>
+              {role === "seeker" ? "SUCHENDER 🔍" : "VERSTECKER 📦"}
+            </strong>
+          </p>
+          <p style={{ color: "#666" }}>Warte auf das Grid in Abschnitt 3...</p>
+        </div>
+      )}
     </div>
   );
 }

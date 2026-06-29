@@ -1,0 +1,58 @@
+name: Hide and Seek CI
+
+# Der Workflow startet bei Pushes und Pull Requests, aber NUR wenn sich im Hide-and-Seek-Ordner was ändert
+on:
+  push:
+    paths:
+      - 'apps/hide-and-seek/**'
+  pull_request:
+    paths:
+      - 'apps/hide-and-seek/**'
+
+jobs:
+  # 1. Job: Backend testen und bauen
+  build-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          # Da sich die package.json im Unterordner befindet, sagen wir npm, wo der Cache liegt
+          cache-dependency-path: 'apps/hide-and-seek/backend/package-lock.json'
+
+      - name: Dependencies installieren
+        run: npm ci
+        working-directory: apps/hide-and-seek/backend
+
+      - name: Backend bauen
+        run: npm run build
+        working-directory: apps/hide-and-seek/backend
+
+  # 2. Job: Frontend testen und bauen
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'apps/hide-and-seek/frontend/package-lock.json'
+
+      - name: Dependencies installieren
+        run: npm ci
+        working-directory: apps/hide-and-seek/frontend
+
+      - name: Frontend bauen
+        run: npm run build
+        working-directory: apps/hide-and-seek/frontend

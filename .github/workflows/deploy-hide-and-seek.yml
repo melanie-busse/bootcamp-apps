@@ -1,6 +1,5 @@
 name: Hide and Seek CI
 
-# Der Workflow startet bei Pushes und Pull Requests, aber NUR wenn sich im Hide-and-Seek-Ordner was ändert
 on:
   push:
     paths:
@@ -10,7 +9,6 @@ on:
       - 'apps/hide-and-seek/**'
 
 jobs:
-  # 1. Job: Backend testen und bauen
   build-backend:
     runs-on: ubuntu-latest
 
@@ -18,13 +16,12 @@ jobs:
       - name: Code auschecken
         uses: actions/checkout@v4
 
-      - name: Node.js einrichten
+      - name: Node.js einrichten (Node 22 LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22  # Auf Node 22 aktualisiert, um die Warnung zu killen
           cache: 'npm'
-          # Da sich die package.json im Unterordner befindet, sagen wir npm, wo der Cache liegt
-          cache-dependency-path: 'apps/hide-and-seek/backend/package-lock.json'
+          cache-dependency-path: 'apps/hide-and-seek/backend/package-lock.json' # Präziser Pfad fürs Caching
 
       - name: Dependencies installieren
         run: npm ci
@@ -34,7 +31,6 @@ jobs:
         run: npm run build
         working-directory: apps/hide-and-seek/backend
 
-  # 2. Job: Frontend testen und bauen
   build-frontend:
     runs-on: ubuntu-latest
 
@@ -42,12 +38,12 @@ jobs:
       - name: Code auschecken
         uses: actions/checkout@v4
 
-      - name: Node.js einrichten
+      - name: Node.js einrichten (Node 22 LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22  # Auf Node 22 aktualisiert
           cache: 'npm'
-          cache-dependency-path: 'apps/hide-and-seek/frontend/package-lock.json'
+          cache-dependency-path: 'apps/hide-and-seek/frontend/package-lock.json' # Präziser Pfad fürs Caching
 
       - name: Dependencies installieren
         run: npm ci

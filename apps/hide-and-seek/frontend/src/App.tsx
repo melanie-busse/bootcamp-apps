@@ -25,7 +25,7 @@ export default function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
 
   useEffect(() => {
-    socket = io("http://localhost:3000");
+    socket = io("http://localhost:3011");
 
     socket.on(
       "match_status",

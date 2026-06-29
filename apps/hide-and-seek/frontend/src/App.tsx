@@ -8,15 +8,26 @@ interface Position {
   y: number;
 }
 
+interface PortalPair {
+  p1: Position;
+  p2: Position;
+}
+
 interface GameState {
   seekerPos: Position;
   hiderPos: Position;
+  walls: Position[]; // 🧱
+  iceCells: Position[]; // 🧊
+  sandCells: Position[]; // 🦥
+  portals: PortalPair[]; // 🌀
+  radarItem: Position | null; // 📡
+  radarActiveUntil: number; // 📡
   timeLeft: number;
   status: "waiting" | "running" | "finished";
   winner: "seeker" | "hider" | null;
 }
 
-let socket: Socket; // Socket außerhalb definieren, damit der Event-Listener Zugriff hat
+let socket: Socket;
 
 export default function App() {
   const [status, setStatus] = useState<MatchStatus>("connecting");
@@ -25,9 +36,13 @@ export default function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
 
   useEffect(() => {
-    socket = io("https://hide-and-seek-api.melanie-busse.de/", {
+    const apiUrl =
+      import.meta.env.VITE_API_URL ||
+      "https://hide-and-seek-api.melanie-busse.de/";
+
+    socket = io(apiUrl, {
       transports: ["websocket", "polling"],
-      secure: true,
+      secure: apiUrl.startsWith("https"),
     });
 
     socket.on(
@@ -85,13 +100,48 @@ export default function App() {
   const renderGrid = () => {
     if (!gameState) return null;
 
+    const isCellWall = (x: number, y: number) =>
+      gameState.walls?.some((w) => w.x === x && w.y === y);
+    const isCellIce = (x: number, y: number) =>
+      gameState.iceCells?.some((i) => i.x === x && i.y === y);
+    const isCellSand = (x: number, y: number) =>
+      gameState.sandCells?.some((s) => s.x === x && s.y === y);
+    const isPortal = (x: number, y: number) =>
+      gameState.portals?.some(
+        (p) => (p.p1.x === x && p.p1.y === y) || (p.p2.x === x && p.p2.y === y)
+      );
+
+    const isRadarActive = Date.now() < gameState.radarActiveUntil;
+
     const cells = [];
     for (let y = 0; y < 10; y++) {
       for (let x = 0; x < 10; x++) {
+        const isWall = isCellWall(x, y);
+        const isIce = isCellIce(x, y);
+        const isSand = isCellSand(x, y);
+        const hasPortal = isPortal(x, y);
+        const hasRadarItem =
+          gameState.radarItem &&
+          gameState.radarItem.x === x &&
+          gameState.radarItem.y === y;
+
         const isSeeker =
           gameState.seekerPos.x === x && gameState.seekerPos.y === y;
         const isHider =
           gameState.hiderPos.x === x && gameState.hiderPos.y === y;
+
+        // 🕵️‍♂️ Sichtbarkeits-Regel für den Verstecker
+        const showHider =
+          role === "hider" || gameState.status === "finished" || isRadarActive;
+
+        let bgColor = "#fafafa";
+        if (isWall) bgColor = "#555555";
+        else if (hasPortal) bgColor = "#a855f7";
+        else if (isIce) bgColor = "#a5f3fc";
+        else if (isSand) bgColor = "#fef08a";
+
+        if (isSeeker) bgColor = "#f44336";
+        else if (isHider && showHider) bgColor = "#4caf50";
 
         cells.push(
           <div
@@ -100,19 +150,28 @@ export default function App() {
               width: "40px",
               height: "40px",
               border: "1px solid #ccc",
-              backgroundColor: isSeeker
-                ? "#f44336"
-                : isHider
-                  ? "#4caf50"
-                  : "#fafafa",
+              backgroundColor: bgColor,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: "1.2rem",
+              boxShadow: hasPortal ? "0 0 8px #a855f7 inset" : "none",
             }}
           >
             {isSeeker && "🔍"}
-            {isHider && "📦"}
+            {/* Der Verstecker wird nur gerendert, wenn er für diesen Client sichtbar sein soll */}
+            {!isSeeker && isHider && showHider && "📦"}
+
+            {/* Umgebungselemente werden NUR gerendert, wenn kein Spieler darauf steht */}
+            {!isSeeker && (!isHider || !showHider) && (
+              <>
+                {isWall && "🧱"}
+                {hasPortal && "🌀"}
+                {hasRadarItem && "📡"}
+                {!hasPortal && !hasRadarItem && isIce && "❄️"}
+                {!hasPortal && !hasRadarItem && isSand && "⏳"}
+              </>
+            )}
           </div>
         );
       }
@@ -170,6 +229,18 @@ export default function App() {
           >
             {renderGrid()}
           </div>
+
+          {Date.now() < gameState.radarActiveUntil && (
+            <div
+              style={{
+                color: "#a855f7",
+                fontWeight: "bold",
+                animation: "blink 1s infinite",
+              }}
+            >
+              📡 RADAR AKTIV - VERSTECKER SICHTBAR!
+            </div>
+          )}
 
           {/* Game Over Screen Overlay */}
           {gameState.status === "finished" && (

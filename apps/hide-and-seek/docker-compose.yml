@@ -15,7 +15,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "8086:80"
     networks:
       - game-network
     depends_on:

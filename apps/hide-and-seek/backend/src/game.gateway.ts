@@ -3,6 +3,7 @@ import {
   WebSocketServer,
   SubscribeMessage,
   ConnectedSocket,
+  MessageBody,
   OnGatewayDisconnect,
   OnGatewayConnection,
 } from '@nestjs/websockets';
@@ -19,13 +20,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     string,
     { roomId: string; role: 'seeker' | 'hider' }
   >();
+  // Speichert die Timer-Intervalle für die Räume
+  private intervals = new Map<string, NodeJS.Timeout>();
 
-  // Service über Dependency Injection injizieren
   constructor(private readonly gameService: GameService) {}
 
   handleConnection(client: Socket) {
-    console.log(`[Matchmaking] Neuer Client: ${client.id}`);
-
     if (!this.waitingSocket) {
       const newRoomId = `room_${Math.random().toString(36).substring(2, 9)}`;
       client.join(newRoomId);
@@ -54,7 +54,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       this.waitingSocket = null;
 
-      // 1. Spiel-Zustand im Service erstellen
       const seekerId = p1Role === 'seeker' ? player1.id : player2.id;
       const hiderId = p1Role === 'hider' ? player1.id : player2.id;
       const initialGameState = this.gameService.createGame(
@@ -63,14 +62,46 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         hiderId,
       );
 
-      // 2. Beiden Clients sagen, wer sie sind
       player1.emit('match_status', { status: 'start', role: p1Role, roomId });
       player2.emit('match_status', { status: 'start', role: p2Role, roomId });
-
-      // 3. Den echten Game State an den ganzen Raum broadcasten
       this.server.to(roomId).emit('game_update', initialGameState);
 
-      console.log(`[Game] Spiel gestartet in Raum ${roomId}`);
+      // --- GAME LOOP START ---
+      const interval = setInterval(() => {
+        const updatedGame = this.gameService.tick(roomId);
+        if (updatedGame) {
+          this.server.to(roomId).emit('game_update', updatedGame);
+
+          if (updatedGame.status === 'finished') {
+            this.clearGameInterval(roomId);
+          }
+        }
+      }, 1000);
+
+      this.intervals.set(roomId, interval);
+    }
+  }
+
+  @SubscribeMessage('move')
+  handleMove(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { direction: 'up' | 'down' | 'left' | 'right' },
+  ) {
+    const registry = this.socketRegistry.get(client.id);
+    if (!registry) return;
+
+    const updatedGame = this.gameService.movePlayer(
+      registry.roomId,
+      client.id,
+      data.direction,
+    );
+    if (updatedGame) {
+      // Broadcast des neuen Zustands an alle Spieler im Raum
+      this.server.to(registry.roomId).emit('game_update', updatedGame);
+
+      if (updatedGame.status === 'finished') {
+        this.clearGameInterval(registry.roomId);
+      }
     }
   }
 
@@ -80,8 +111,23 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
     const registration = this.socketRegistry.get(client.id);
     if (registration) {
+      this.clearGameInterval(registration.roomId);
       this.gameService.deleteGame(registration.roomId);
+      // Den verbleibenden Spieler im Raum benachrichtigen, falls der andere geht
+      this.server
+        .to(registration.roomId)
+        .emit('player_disconnected', {
+          message: 'Dein Mitspieler hat das Spiel verlassen.',
+        });
     }
     this.socketRegistry.delete(client.id);
+  }
+
+  private clearGameInterval(roomId: string) {
+    const interval = this.intervals.get(roomId);
+    if (interval) {
+      clearInterval(interval);
+      this.intervals.delete(roomId);
+    }
   }
 }

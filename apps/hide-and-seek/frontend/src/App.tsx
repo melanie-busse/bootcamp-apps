@@ -8,12 +8,20 @@ interface Position {
   y: number;
 }
 
+interface PortalPair {
+  p1: Position;
+  p2: Position;
+}
+
 interface GameState {
   seekerPos: Position;
   hiderPos: Position;
   walls: Position[]; // 🧱
   iceCells: Position[]; // 🧊
   sandCells: Position[]; // 🦥
+  portals: PortalPair[]; // 🌀
+  radarItem: Position | null; // 📡
+  radarActiveUntil: number; // 📡
   timeLeft: number;
   status: "waiting" | "running" | "finished";
   winner: "seeker" | "hider" | null;
@@ -94,11 +102,16 @@ export default function App() {
 
     const isCellWall = (x: number, y: number) =>
       gameState.walls?.some((w) => w.x === x && w.y === y);
-    // Hilfsfunktionen für die neuen Zellen:
     const isCellIce = (x: number, y: number) =>
       gameState.iceCells?.some((i) => i.x === x && i.y === y);
     const isCellSand = (x: number, y: number) =>
       gameState.sandCells?.some((s) => s.x === x && s.y === y);
+    const isPortal = (x: number, y: number) =>
+      gameState.portals?.some(
+        (p) => (p.p1.x === x && p.p1.y === y) || (p.p2.x === x && p.p2.y === y)
+      );
+
+    const isRadarActive = Date.now() < gameState.radarActiveUntil;
 
     const cells = [];
     for (let y = 0; y < 10; y++) {
@@ -106,20 +119,31 @@ export default function App() {
         const isWall = isCellWall(x, y);
         const isIce = isCellIce(x, y);
         const isSand = isCellSand(x, y);
+        const hasPortal = isPortal(x, y);
+        const hasRadarItem =
+          gameState.radarItem &&
+          gameState.radarItem.x === x &&
+          gameState.radarItem.y === y;
 
         const isSeeker =
           gameState.seekerPos.x === x && gameState.seekerPos.y === y;
         const isHider =
           gameState.hiderPos.x === x && gameState.hiderPos.y === y;
 
-        // Hintergrundfarbe dynamisch bestimmen
+        // 🕵️‍♂️ Sichtbarkeits-Regel für den Verstecker
+        const showHider =
+          role === "hider" || gameState.status === "finished" || isRadarActive;
+
+        // 1. SCHRITT: Basis-Hintergrundfarbe der Zelle bestimmen
         let bgColor = "#fafafa";
         if (isWall) bgColor = "#555555";
-        else if (isSeeker) bgColor = "#f44336";
-        else if (isHider) bgColor = "#4caf50";
-        else if (isIce)
-          bgColor = "#a5f3fc"; // Schönes helles Eisblau
-        else if (isSand) bgColor = "#fef08a"; // Sanftes Sandgelb
+        else if (hasPortal) bgColor = "#a855f7";
+        else if (isIce) bgColor = "#a5f3fc";
+        else if (isSand) bgColor = "#fef08a";
+
+        // 2. SCHRITT: Wenn ein SICHTBARER Spieler auf der Zelle steht, überschreibe die Farbe
+        if (isSeeker) bgColor = "#f44336";
+        else if (isHider && showHider) bgColor = "#4caf50";
 
         cells.push(
           <div
@@ -133,13 +157,24 @@ export default function App() {
               alignItems: "center",
               justifyContent: "center",
               fontSize: "1.2rem",
+              boxShadow: hasPortal ? "0 0 8px #a855f7 inset" : "none",
             }}
           >
+            {/* 3. SCHRITT: Inhalt mit korrekter Priorität rendern */}
             {isSeeker && "🔍"}
-            {isHider && "📦"}
-            {isWall && "🧱"}
-            {!isSeeker && !isHider && isIce && "❄️"}
-            {!isSeeker && !isHider && isSand && "⏳"}
+            {/* Der Verstecker wird nur gerendert, wenn er für diesen Client sichtbar sein soll */}
+            {!isSeeker && isHider && showHider && "📦"}
+
+            {/* Umgebungselemente werden NUR gerendert, wenn kein Spieler darauf steht */}
+            {!isSeeker && (!isHider || !showHider) && (
+              <>
+                {isWall && "🧱"}
+                {hasPortal && "🌀"}
+                {hasRadarItem && "📡"}
+                {!hasPortal && !hasRadarItem && isIce && "❄️"}
+                {!hasPortal && !hasRadarItem && isSand && "⏳"}
+              </>
+            )}
           </div>
         );
       }
@@ -197,6 +232,18 @@ export default function App() {
           >
             {renderGrid()}
           </div>
+
+          {Date.now() < gameState.radarActiveUntil && (
+            <div
+              style={{
+                color: "#a855f7",
+                fontWeight: "bold",
+                animation: "blink 1s infinite",
+              }}
+            >
+              📡 RADAR AKTIV - VERSTECKER SICHTBAR!
+            </div>
+          )}
 
           {/* Game Over Screen Overlay */}
           {gameState.status === "finished" && (

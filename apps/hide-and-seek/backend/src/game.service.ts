@@ -5,15 +5,24 @@ export interface Position {
   y: number;
 }
 
+// 🌀 Interface für ein Portal-Paar
+export interface PortalPair {
+  p1: Position;
+  p2: Position;
+}
+
 export interface GameState {
   roomId: string;
   seekerId: string;
   hiderId: string;
   seekerPos: Position;
   hiderPos: Position;
-  walls: Position[]; // 🧱
-  iceCells: Position[]; // 🧊
-  sandCells: Position[]; // 🦥
+  walls: Position[];
+  iceCells: Position[];
+  sandCells: Position[];
+  portals: PortalPair[]; // 🌀 Neu im State
+  radarItem: Position | null; // 📡 Das Item auf dem Feld (null, wenn eingesammelt)
+  radarActiveUntil: number; // 📡 Zeitstempel, bis wann der Sucher den Hider sehen kann (in ms)
   timeLeft: number;
   status: 'waiting' | 'running' | 'finished';
   winner: 'seeker' | 'hider' | null;
@@ -22,8 +31,6 @@ export interface GameState {
 @Injectable()
 export class GameService {
   private games = new Map<string, GameState>();
-
-  // 🦥 Speichert, bis zu welchem Zeitstempel (in ms) ein Spieler blockiert ist
   private playerCooldowns = new Map<string, number>();
 
   createGame(roomId: string, seekerId: string, hiderId: string): GameState {
@@ -34,24 +41,22 @@ export class GameService {
       seekerPos: { x: 0, y: 0 },
       hiderPos: { x: 9, y: 9 },
       walls: [
-        { x: 2, y: 2 },
-        { x: 2, y: 3 },
-        { x: 2, y: 4 },
-        { x: 7, y: 5 },
-        { x: 7, y: 6 },
-        { x: 7, y: 7 },
+        { x: 2, y: 2 }, { x: 2, y: 3 }, { x: 2, y: 4 },
+        { x: 7, y: 5 }, { x: 7, y: 6 }, { x: 7, y: 7 },
       ],
       iceCells: [
-        { x: 4, y: 4 },
-        { x: 4, y: 1 },
-        { x: 4, y: 5 },
-        { x: 5, y: 5 },
+        { x: 4, y: 4 }, { x: 4, y: 1 }, { x: 4, y: 5 }, { x: 5, y: 5 },
       ],
       sandCells: [
-        { x: 1, y: 7 },
-        { x: 2, y: 7 },
-        { x: 3, y: 7 },
+        { x: 1, y: 7 }, { x: 2, y: 7 }, { x: 3, y: 7 },
       ],
+      // 🌀 Zwei verknüpfte Portale auf dem Feld platzieren
+      portals: [
+        { p1: { x: 0, y: 5 }, p2: { x: 9, y: 4 } }
+      ],
+      // 📡 Das Radar-Item liegt in der Mitte des Spielfelds bereit
+      radarItem: { x: 5, y: 2 },
+      radarActiveUntil: 0,
       timeLeft: 45,
       status: 'running',
       winner: null,
@@ -77,88 +82,74 @@ export class GameService {
     const game = this.games.get(roomId);
     if (!game || game.status !== 'running') return undefined;
 
-    // 🦥 SAND-CHECK 1: Ist der Spieler aktuell noch verlangsamt/festgesteckt?
     const currentCooldown = this.playerCooldowns.get(playerId) || 0;
-    if (Date.now() < currentCooldown) {
-      // Cooldown läuft noch -> Ignoriere die Bewegung komplett
-      return game;
-    }
+    if (Date.now() < currentCooldown) return game;
 
     const isSeeker = game.seekerId === playerId;
-    const currentPos = isSeeker ? { ...game.seekerPos } : { ...game.hiderPos };
-
-    const nextPos = { ...currentPos };
+    let nextPos = isSeeker ? { ...game.seekerPos } : { ...game.hiderPos };
 
     switch (direction) {
-      case 'up':
-        if (nextPos.y > 0) nextPos.y--;
-        break;
-      case 'down':
-        if (nextPos.y < 9) nextPos.y++;
-        break;
-      case 'left':
-        if (nextPos.x > 0) nextPos.x--;
-        break;
-      case 'right':
-        if (nextPos.x < 9) nextPos.x++;
-        break;
+      case 'up': if (nextPos.y > 0) nextPos.y--; break;
+      case 'down': if (nextPos.y < 9) nextPos.y++; break;
+      case 'left': if (nextPos.x > 0) nextPos.x--; break;
+      case 'right': if (nextPos.x < 9) nextPos.x++; break;
     }
 
     if (!this.isWall(game, nextPos.x, nextPos.y)) {
+
+      // 🧊 EIS-LOGIK
+      const isOnIce = game.iceCells.some((ice) => ice.x === nextPos.x && ice.y === nextPos.y);
+      if (isOnIce) {
+        switch (direction) {
+          case 'up': if (nextPos.y > 0) nextPos.y--; break;
+          case 'down': if (nextPos.y < 9) nextPos.y++; break;
+          case 'left': if (nextPos.x > 0) nextPos.x--; break;
+          case 'right': if (nextPos.x < 9) nextPos.x++; break;
+        }
+        if (this.isWall(game, nextPos.x, nextPos.y)) {
+          // Falls wir gegen eine Wand gerutscht wären, nimm den Schritt zurück
+          nextPos = isSeeker ? { ...game.seekerPos } : { ...game.hiderPos };
+          switch (direction) {
+            case 'up': if (nextPos.y > 0) nextPos.y--; break;
+            case 'down': if (nextPos.y < 9) nextPos.y++; break;
+            case 'left': if (nextPos.x > 0) nextPos.x--; break;
+            case 'right': if (nextPos.x < 9) nextPos.x++; break;
+          }
+        }
+      }
+
+      // 🌀 PORTAL-LOGIK: Prüfen, ob die Zelle ein Portal-Eingang ist
+      for (const portal of game.portals) {
+        if (nextPos.x === portal.p1.x && nextPos.y === portal.p1.y) {
+          nextPos = { ...portal.p2 }; // Teleportiere zu p2
+          break;
+        } else if (nextPos.x === portal.p2.x && nextPos.y === portal.p2.y) {
+          nextPos = { ...portal.p1 }; // Teleportiere zu p1
+          break;
+        }
+      }
+
+      // Position final zuweisen
       if (isSeeker) {
         game.seekerPos = nextPos;
       } else {
         game.hiderPos = nextPos;
       }
 
-      // 🧊 EIS-LOGIK
-      const isOnIce = game.iceCells.some(
-          (ice) => ice.x === nextPos.x && ice.y === nextPos.y,
-      );
-
-      if (isOnIce) {
-        const icePos = { ...nextPos };
-        switch (direction) {
-          case 'up':
-            if (icePos.y > 0) icePos.y--;
-            break;
-          case 'down':
-            if (icePos.y < 9) icePos.y++;
-            break;
-          case 'left':
-            if (icePos.x > 0) icePos.x--;
-            break;
-          case 'right':
-            if (icePos.x < 9) icePos.x++;
-            break;
-        }
-
-        if (!this.isWall(game, icePos.x, icePos.y)) {
-          if (isSeeker) {
-            game.seekerPos = icePos;
-          } else {
-            game.hiderPos = icePos;
-          }
-        }
-      }
-
-      // 🦥 SAND-LOGIK 2: Ist der Spieler auf einer Sand-Zelle gelandet?
-      // (Wir prüfen die finale Position, falls er über das Eis reingeschlittert ist)
-      const finalPos = isSeeker ? game.seekerPos : game.hiderPos;
-      const isOnSand = game.sandCells.some(
-          (sand) => sand.x === finalPos.x && sand.y === finalPos.y,
-      );
-
+      // 🦥 SAND-LOGIK
+      const isOnSand = game.sandCells.some((sand) => sand.x === nextPos.x && sand.y === nextPos.y);
       if (isOnSand) {
-        // Setze einen Cooldown von 1000 Millisekunden (1 Sekunde) ab jetzt
         this.playerCooldowns.set(playerId, Date.now() + 1000);
       }
 
+      // 📡 RADAR-ITEM LOGIK: Wenn der Sucher (oder Verstecker) das Item einsammelt
+      if (game.radarItem && nextPos.x === game.radarItem.x && nextPos.y === game.radarItem.y) {
+        game.radarItem = null; // Item verschwindet
+        game.radarActiveUntil = Date.now() + 4000; // Radar hält 4 Sekunden lang aktiv!
+      }
+
       // Kollisionsprüfung
-      if (
-          game.seekerPos.x === game.hiderPos.x &&
-          game.seekerPos.y === game.hiderPos.y
-      ) {
+      if (game.seekerPos.x === game.hiderPos.x && game.seekerPos.y === game.hiderPos.y) {
         game.status = 'finished';
         game.winner = 'seeker';
       }
@@ -183,7 +174,6 @@ export class GameService {
 
   deleteGame(roomId: string): void {
     this.games.delete(roomId);
-    // Aufräumen, wenn das Spiel gelöscht wird
     this.playerCooldowns.clear();
   }
 }

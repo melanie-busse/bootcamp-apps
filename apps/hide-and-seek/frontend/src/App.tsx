@@ -11,6 +11,9 @@ interface Position {
 interface GameState {
   seekerPos: Position;
   hiderPos: Position;
+  walls: Position[]; // 🧱
+  iceCells: Position[]; // 🧊
+  sandCells: Position[]; // 🦥
   timeLeft: number;
   status: "waiting" | "running" | "finished";
   winner: "seeker" | "hider" | null;
@@ -25,9 +28,13 @@ export default function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
 
   useEffect(() => {
-    socket = io("https://hide-and-seek-api.melanie-busse.de/", {
+    const apiUrl =
+      import.meta.env.VITE_API_URL ||
+      "https://hide-and-seek-api.melanie-busse.de/";
+
+    socket = io(apiUrl, {
       transports: ["websocket", "polling"],
-      secure: true,
+      secure: apiUrl.startsWith("https"),
     });
 
     socket.on(
@@ -85,13 +92,34 @@ export default function App() {
   const renderGrid = () => {
     if (!gameState) return null;
 
+    const isCellWall = (x: number, y: number) =>
+      gameState.walls?.some((w) => w.x === x && w.y === y);
+    // Hilfsfunktionen für die neuen Zellen:
+    const isCellIce = (x: number, y: number) =>
+      gameState.iceCells?.some((i) => i.x === x && i.y === y);
+    const isCellSand = (x: number, y: number) =>
+      gameState.sandCells?.some((s) => s.x === x && s.y === y);
+
     const cells = [];
     for (let y = 0; y < 10; y++) {
       for (let x = 0; x < 10; x++) {
+        const isWall = isCellWall(x, y);
+        const isIce = isCellIce(x, y);
+        const isSand = isCellSand(x, y);
+
         const isSeeker =
           gameState.seekerPos.x === x && gameState.seekerPos.y === y;
         const isHider =
           gameState.hiderPos.x === x && gameState.hiderPos.y === y;
+
+        // Hintergrundfarbe dynamisch bestimmen
+        let bgColor = "#fafafa";
+        if (isWall) bgColor = "#555555";
+        else if (isSeeker) bgColor = "#f44336";
+        else if (isHider) bgColor = "#4caf50";
+        else if (isIce)
+          bgColor = "#a5f3fc"; // Schönes helles Eisblau
+        else if (isSand) bgColor = "#fef08a"; // Sanftes Sandgelb
 
         cells.push(
           <div
@@ -100,11 +128,7 @@ export default function App() {
               width: "40px",
               height: "40px",
               border: "1px solid #ccc",
-              backgroundColor: isSeeker
-                ? "#f44336"
-                : isHider
-                  ? "#4caf50"
-                  : "#fafafa",
+              backgroundColor: bgColor,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -113,6 +137,9 @@ export default function App() {
           >
             {isSeeker && "🔍"}
             {isHider && "📦"}
+            {isWall && "🧱"}
+            {!isSeeker && !isHider && isIce && "❄️"}
+            {!isSeeker && !isHider && isSand && "⏳"}
           </div>
         );
       }

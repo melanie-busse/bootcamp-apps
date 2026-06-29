@@ -1,51 +1,43 @@
-name: Hide and Seek CI
+name: Deploy Hide and Seek
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'apps/hide-and-seek/**'
-  pull_request:
-    paths:
-      - 'apps/hide-and-seek/**'
+      - '.github/workflows/deploy-hide-and-seek.yml'
 
 jobs:
-  build-backend:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Code auschecken
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Node.js einrichten (Node 22 LTS)
-        uses: actions/setup-node@v4
+      - name: Deploy to vServer via SSH
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          node-version: 22
-          # Caching hier entfernt, um Pfad-Fehler im Monorepo zu vermeiden
-
-      - name: Dependencies installieren
-        run: npm ci
-        working-directory: apps/hide-and-seek/backend
-
-      - name: Backend bauen
-        run: npm run build
-        working-directory: apps/hide-and-seek/backend
-
-  build-frontend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Code auschecken
-        uses: actions/checkout@v4
-
-      - name: Node.js einrichten (Node 22 LTS)
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Dependencies installieren
-        run: npm ci
-        working-directory: apps/hide-and-seek/frontend
-
-      - name: Frontend bauen
-        run: npm run build
-        working-directory: apps/hide-and-seek/frontend
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # 1. Sicherstellen, dass das Verzeichnis existiert. Wenn nicht, klonen.
+            if [ ! -d "~/bootcamp-apps" ]; then
+              git clone https://github.com/${{ github.repository }}.git ~/bootcamp-apps
+            fi
+            
+            # 2. In das Hauptverzeichnis wechseln
+            cd ~/bootcamp-apps
+            
+            # 3. Code absolut frisch ziehen und lokale Änderungen verwerfen
+            git fetch origin main
+            git reset --hard origin/main
+            
+            # 4. In den spezifischen Hide-and-Seek-Ordner wechseln
+            cd apps/hide-and-seek
+            
+            # 5. Container stoppen, alte Netzwerke wegräumen und frisch bauen
+            docker compose down --remove-orphans || true
+            docker compose up -d --build

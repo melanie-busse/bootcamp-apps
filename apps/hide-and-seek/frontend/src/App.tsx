@@ -25,7 +25,10 @@ export default function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
 
   useEffect(() => {
-    socket = io("http://localhost:3011");
+    socket = io("https://hide-and-seek-api.melanie-busse.de/", {
+      transports: ["websocket", "polling"],
+      secure: true,
+    });
 
     socket.on(
       "match_status",

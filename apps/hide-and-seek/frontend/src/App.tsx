@@ -20,7 +20,7 @@ interface GameState {
   iceCells: Position[]; // 🧊
   sandCells: Position[]; // 🦥
   portals: PortalPair[]; // 🌀
-  radarItem: Position | null; // 📡
+  radarItems: Position[]; // 📡
   radarActiveUntil: number; // 📡
   timeLeft: number;
   status: "waiting" | "running" | "finished";
@@ -120,10 +120,7 @@ export default function App() {
         const isIce = isCellIce(x, y);
         const isSand = isCellSand(x, y);
         const hasPortal = isPortal(x, y);
-        const hasRadarItem =
-          gameState.radarItem &&
-          gameState.radarItem.x === x &&
-          gameState.radarItem.y === y;
+        const hasRadarItem = gameState.radarItems?.some(item => item.x === x && item.y === y);
 
         const isSeeker =
           gameState.seekerPos.x === x && gameState.seekerPos.y === y;

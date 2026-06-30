@@ -20,11 +20,12 @@ export interface GameState {
   iceCells: Position[];
   sandCells: Position[];
   portals: PortalPair[];
-  radarItem: Position | null;
+  radarItems: Position[]; // 📡 Geändert zu einem Array für mehrere Items!
   radarActiveUntil: number;
   timeLeft: number;
   status: 'waiting' | 'running' | 'finished';
   winner: 'seeker' | 'hider' | null;
+  itemSpawnTimer: number; // ⏳ Interner Server-Counter für den Respawn
 }
 
 @Injectable()
@@ -49,16 +50,17 @@ export class GameService {
       sandCells: [
         { x: 1, y: 7 }, { x: 2, y: 7 }, { x: 3, y: 7 },
       ],
-      // 🌀 Zwei verknüpfte Portale auf dem Feld platzieren
       portals: [
         { p1: { x: 0, y: 5 }, p2: { x: 9, y: 4 } }
       ],
-      // 📡 Das Radar-Item liegt in der Mitte des Spielfelds bereit
-      radarItem: { x: 5, y: 2 },
+      radarItems: [
+        { x: 5, y: 2 } // Erstes Item zum Start
+      ],
       radarActiveUntil: 0,
       timeLeft: 45,
       status: 'running',
       winner: null,
+      itemSpawnTimer: 15, // Alle 15 Sekunden ein neues Item
     };
 
     this.games.set(roomId, newGame);
@@ -71,6 +73,16 @@ export class GameService {
 
   private isWall(game: GameState, x: number, y: number): boolean {
     return game.walls.some((wall) => wall.x === x && wall.y === y);
+  }
+
+  // Hilfsmethode: Prüft, ob eine Koordinate komplett frei von statischen Elementen ist
+  private isCellOccupied(game: GameState, x: number, y: number): boolean {
+    if (this.isWall(game, x, y)) return true;
+    if (game.iceCells.some(c => c.x === x && c.y === y)) return true;
+    if (game.sandCells.some(c => c.x === x && c.y === y)) return true;
+    if (game.portals.some(p => (p.p1.x === x && p.p1.y === y) || (p.p2.x === x && p.p2.y === y))) return true;
+    if (game.radarItems.some(i => i.x === x && i.y === y)) return true;
+    return false;
   }
 
   movePlayer(
@@ -106,7 +118,6 @@ export class GameService {
           case 'right': if (nextPos.x < 9) nextPos.x++; break;
         }
         if (this.isWall(game, nextPos.x, nextPos.y)) {
-          // Falls wir gegen eine Wand gerutscht wären, nimm den Schritt zurück
           nextPos = isSeeker ? { ...game.seekerPos } : { ...game.hiderPos };
           switch (direction) {
             case 'up': if (nextPos.y > 0) nextPos.y--; break;
@@ -117,18 +128,17 @@ export class GameService {
         }
       }
 
-      // 🌀 PORTAL-LOGIK: Prüfen, ob die Zelle ein Portal-Eingang ist
+      // 🌀 PORTAL-LOGIK
       for (const portal of game.portals) {
         if (nextPos.x === portal.p1.x && nextPos.y === portal.p1.y) {
-          nextPos = { ...portal.p2 }; // Teleportiere zu p2
+          nextPos = { ...portal.p2 };
           break;
         } else if (nextPos.x === portal.p2.x && nextPos.y === portal.p2.y) {
-          nextPos = { ...portal.p1 }; // Teleportiere zu p1
+          nextPos = { ...portal.p1 };
           break;
         }
       }
 
-      // Position final zuweisen
       if (isSeeker) {
         game.seekerPos = nextPos;
       } else {
@@ -141,10 +151,11 @@ export class GameService {
         this.playerCooldowns.set(playerId, Date.now() + 1000);
       }
 
-      // 📡 RADAR-ITEM LOGIK: Wenn der Sucher (oder Verstecker) das Item einsammelt
-      if (game.radarItem && nextPos.x === game.radarItem.x && nextPos.y === game.radarItem.y) {
-        game.radarItem = null; // Item verschwindet
-        game.radarActiveUntil = Date.now() + 4000; // Radar hält 4 Sekunden lang aktiv!
+      // 📡 MEHRERE RADAR-ITEMS: Prüfen, ob ein Item aufgesammelt wurde
+      const itemIndex = game.radarItems.findIndex(item => item.x === nextPos.x && item.y === nextPos.y);
+      if (itemIndex !== -1) {
+        game.radarItems.splice(itemIndex, 1); // Entfernt das spezifische Item aus dem Array
+        game.radarActiveUntil = Date.now() + 4000;
       }
 
       // Kollisionsprüfung
@@ -162,6 +173,27 @@ export class GameService {
     if (!game || game.status !== 'running') return undefined;
 
     game.timeLeft--;
+    game.itemSpawnTimer--;
+
+    // ⏳ Wenn der Timer abläuft, spawne ein neues Item an einer freien Stelle
+    if (game.itemSpawnTimer <= 0) {
+      game.itemSpawnTimer = 15; // Timer zurücksetzen
+
+      let spawned = false;
+      let attempts = 0;
+
+      // Maximal 50 Versuche, um eine freie Zelle zu finden (Verhindert Endlosschleifen)
+      while (!spawned && attempts < 50) {
+        const randomX = Math.floor(Math.random() * 10);
+        const randomY = Math.floor(Math.random() * 10);
+
+        if (!this.isCellOccupied(game, randomX, randomY)) {
+          game.radarItems.push({ x: randomX, y: randomY });
+          spawned = true;
+        }
+        attempts++;
+      }
+    }
 
     if (game.timeLeft <= 0) {
       game.status = 'finished';

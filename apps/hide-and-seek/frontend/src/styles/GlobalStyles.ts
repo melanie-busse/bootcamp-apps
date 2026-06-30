@@ -7,28 +7,23 @@ const blink = keyframes`
 `;
 
 export const GlobalStyles = createGlobalStyle`
-  /* 1. Die globalen Farben (CSS-Variablen) */
+
   :root {
-    --color-floor: #fafafa;
-    --color-wall: #555555;
+    --color-floor: #ffffff;
+    --color-wall: #444444;      
+    --color-ice: #9adeff;
+    --color-sand: #fff59d;
     --color-portal: #a855f7;
-    --color-ice: #a5f3fc;
-    --color-sand: #fef08a;
+
     --color-seeker: #f44336;
     --color-hider: #4caf50;
-    --color-radar: #a855f7;
-    --color-h3: #ff9800;
-
-    /* Allgemeine UI-Farben */
-    --color-bg-main: #f0f2f5;
-    --color-text: #333333;
+    --color-text: #ffffff;       
 
     --color-button-bg: #2196f3;
-    --color-button-bg-hover: #1976d2;
     --color-button-text: #ffffff;
+    --color-button-bg-hover: #1976d2;
   }
-
-  /* 2. Basis-Styles */
+  
   *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -36,10 +31,13 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--color-bg-main);
-    color: var(--color-text);
-    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    background-color: #1e293b;  
+    color: var(--color-text);     
+    font-family: sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .radar-blink {

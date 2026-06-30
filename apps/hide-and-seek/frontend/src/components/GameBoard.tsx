@@ -3,13 +3,13 @@ import styled from "styled-components";
 import type { GameState } from "../types/GameState.ts";
 import { GameCell } from "./GameCell.tsx";
 import {
-  isCellIce,
-  isCellPortal,
-  isCellRadarItem,
-  isCellSand,
-  isCellWall,
+  checkIsCellIce,
+  checkIsCellPortal,
+  checkIsCellRadarItem,
+  checkIsCellSand,
+  checkIsCellWall,
 } from "../utils/cellUtils.ts";
-import { isHider, isSeeker, showHider } from "../utils/playerUtils.ts";
+import { checkIsHider, checkIsSeeker, checkHiderVisibility } from "../utils/playerUtils.ts";
 
 interface GameBoardProps {
   gameState: GameState;
@@ -28,14 +28,14 @@ export function GameBoard({ gameState, role }: GameBoardProps) {
       cells.push(
         <GameCell
           key={`${x}-${y}`}
-          isWall={isCellWall(cellArgs)}
-          isIce={isCellIce(cellArgs)}
-          isSand={isCellSand(cellArgs)}
-          hasPortal={isCellPortal(cellArgs)}
-          hasRadarItem={isCellRadarItem(cellArgs)}
-          isSeeker={isSeeker(cellArgs)}
-          isHider={isHider(cellArgs)}
-          showHider={showHider({gameState, role, isRadarActive})}
+          isWall={checkIsCellWall(cellArgs)}
+          isIce={checkIsCellIce(cellArgs)}
+          isSand={checkIsCellSand(cellArgs)}
+          hasPortal={checkIsCellPortal(cellArgs)}
+          hasRadarItem={checkIsCellRadarItem(cellArgs)}
+          isSeeker={checkIsSeeker(cellArgs)}
+          isHider={checkIsHider(cellArgs)}
+          showHider={checkHiderVisibility({gameState, role, isRadarActive})}
         />
       );
     }

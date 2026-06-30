@@ -11,14 +11,18 @@ export interface showHiderProps {
   role: "seeker" | "hider" | null;
   isRadarActive: boolean;
 }
-export function isSeeker({ gameState, x, y}: playerProps){
+export function checkIsSeeker({ gameState, x, y}: playerProps){
   return gameState.seekerPos.x === x && gameState.seekerPos.y === y;
 }
 
-export function isHider({ gameState, x, y }: playerProps) {
+export function checkIsHider({ gameState, x, y }: playerProps) {
   return gameState.hiderPos.x === x && gameState.hiderPos.y === y;
 }
 
-export function showHider({ gameState, role, isRadarActive }: showHiderProps) {
+export function checkHiderVisibility({
+  gameState,
+  role,
+  isRadarActive,
+}: showHiderProps) {
   return role === "hider" || gameState.status === "finished" || isRadarActive;
 }
